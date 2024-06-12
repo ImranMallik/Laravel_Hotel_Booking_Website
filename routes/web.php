@@ -33,8 +33,14 @@ require __DIR__ . '/auth.php';
 
 
 
-// 
+// Admin Route-----______
 Route::group(['middleware' => ['auth', 'roles:admin'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('dashboard', [AdminController::class, 'adminDashboard'])->name('dashboard');
     Route::get('logout', [AdminController::class, 'adminLogout'])->name('logout');
+    Route::get('admin/profile', [AdminController::class, 'profile'])->name('profile');
+    Route::post('admin/profile/stote', [AdminController::class, 'profileStore'])->name('profile-store');
+    Route::get('password/change', [AdminController::class, 'changePassword'])->name('password-change');
+    Route::post('password/update', [AdminController::class, 'updatePassword'])->name('password-update');
 });
+
+Route::get('admin/login', [AdminController::class, 'index'])->name('admin.login');
