@@ -20,14 +20,25 @@
                             <i class="bx bx-home-alt"></i>
                             <a href="#">123 Virgil A Stanton, Virginia, USA</a>
                         </li>
-                        <li>
-                            <i class="bx bxs-user-pin"></i>
-                            <a href="{{ route('login') }}">Login</a>
-                        </li>
-                        <li>
-                            <i class="bx bxs-user-rectangle"></i>
-                            <a href="{{ route('register') }}">Register</a>
-                        </li>
+                        @auth
+                            <li>
+                                <i class="bx bxs-user-pin"></i>
+                                <a href="{{ route('dashboard') }}">Dashboadrd</a>
+                            </li>
+                            <li>
+                                <i class="bx bxs-user-rectangle"></i>
+                                <a href="{{ route('user.logout') }}">Logout</a>
+                            </li>
+                        @else
+                            <li>
+                                <i class="bx bxs-user-pin"></i>
+                                <a href="{{ route('login') }}">Login</a>
+                            </li>
+                            <li>
+                                <i class="bx bxs-user-rectangle"></i>
+                                <a href="{{ route('register') }}">Register</a>
+                            </li>
+                        @endauth
                     </ul>
                 </div>
             </div>

@@ -25,6 +25,8 @@
     <link rel="stylesheet" href="{{ asset('Backend/assets/css/dark-theme.css') }}" />
     <link rel="stylesheet" href="{{ asset('Backend/assets/css/semi-dark.css') }}" />
     <link rel="stylesheet" href="{{ asset('Backend/assets/css/header-colors.css') }}" />
+    {{-- DataTable --}}
+    <link href="{{ asset('Backend/assets/plugins/datatable/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
     {{-- Toatser --}}
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
     <title>Hotel || Booking || Admin-Dashboard</title>
@@ -77,11 +79,23 @@
     <script src="{{ asset('Backend/assets/js/index.js') }}"></script>
     <!--app JS-->
     <script src="{{ asset('Backend/assets/js/app.js') }}"></script>
+    {{-- Sweet Code --}}
+    <script src="{{ asset('Backend/assets/js/code.js') }}"></script>
     <script>
         new PerfectScrollbar(".app-container")
     </script>
+    {{-- Sweet Alert --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     {{-- Toaster Js --}}
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    {{-- dataTable --}}
+    <script src=" {{ asset('Backend/assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
+    <script src=" {{ asset('Backend/assets/plugins/datatable/js/dataTables.bootstrap5.min.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#example').DataTable();
+        });
+    </script>
 
     <script>
         @if (Session::has('message'))

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Backend\AdminController;
+use App\Http\Controllers\Backend\TeamController;
 use App\Http\Controllers\Frontend\UserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -21,13 +22,15 @@ use Illuminate\Support\Facades\Route;
 // })->name('index');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('frontend.dashboard.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/edit/profile', [UserController::class, 'userProfile'])->name('user.profile');
+    Route::post('/profile/store', [UserController::class, 'profileStore'])->name('profile.store');
+    Route::get('logout', [UserController::class, 'logout'])->name('user.logout');
+    Route::get('edit/password', [UserController::class, 'editPass'])->name('edit.password');
+    Route::post('edit/password', [UserController::class, 'storePass'])->name('password-update');
 });
 
 require __DIR__ . '/auth.php';
@@ -47,3 +50,14 @@ Route::group(['middleware' => ['auth', 'roles:admin'], 'prefix' => 'admin', 'as'
 });
 
 Route::get('admin/login', [AdminController::class, 'index'])->name('admin.login');
+// Team Route
+Route::middleware(['auth', 'roles:admin'])->group(function () {
+    Route::controller(TeamController::class)->group(function () {
+        Route::get('/all/team', 'AllTeam')->name('all.team');
+        Route::get('/add/team', 'AddTeam')->name('add.team');
+        Route::post('/add/team', 'StoreTeam')->name('list.store');
+        Route::get('/edit/team/{id}', 'editTeam')->name('edit.team');
+        Route::post('/update/team/', 'updateTeam')->name('update.team');
+        Route::get('/delete/team/{id}', 'deleteTeam')->name('delete.team');
+    });
+});

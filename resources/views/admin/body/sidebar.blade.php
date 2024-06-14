@@ -25,12 +25,12 @@
             <a href="javascript:;" class="has-arrow">
                 <div class="parent-icon"><i class="bx bx-category"></i>
                 </div>
-                <div class="menu-title">Application</div>
+                <div class="menu-title">Manage Teams</div>
             </a>
             <ul>
-                <li> <a href="app-emailbox.html"><i class='bx bx-radio-circle'></i>Email</a>
+                <li> <a href="{{ route('all.team') }}"><i class='bx bx-radio-circle'></i>All Team</a>
                 </li>
-                <li> <a href="app-chat-box.html"><i class='bx bx-radio-circle'></i>Chat Box</a>
+                <li> <a href="{{ route('add.team') }}"><i class='bx bx-radio-circle'></i>Add Team</a>
                 </li>
 
             </ul>
@@ -67,22 +67,7 @@
 
             </ul>
         </li>
-        <li>
-            <a class="has-arrow" href="javascript:;">
-                <div class="parent-icon"><i class="bx bx-repeat"></i>
-                </div>
-                <div class="menu-title">Content</div>
-            </a>
-            <ul>
-                <li> <a href="content-grid-system.html"><i class='bx bx-radio-circle'></i>Grid System</a>
-                </li>
-                <li> <a href="content-typography.html"><i class='bx bx-radio-circle'></i>Typography</a>
-                </li>
-                <li> <a href="content-text-utilities.html"><i class='bx bx-radio-circle'></i>Text
-                        Utilities</a>
-                </li>
-            </ul>
-        </li>
+
 
 
 

@@ -111,7 +111,7 @@
                                             <h6 class="mb-0">Email</h6>
                                         </div>
                                         <div class="col-sm-9 text-secondary">
-                                            <input type="text" class="form-control" name="email"
+                                            <input type="email" class="form-control" name="email"
                                                 value="{{ $profileData->email }}" />
                                         </div>
                                     </div>
