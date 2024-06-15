@@ -81,6 +81,8 @@
     <script src="{{ asset('Backend/assets/js/app.js') }}"></script>
     {{-- Sweet Code --}}
     <script src="{{ asset('Backend/assets/js/code.js') }}"></script>
+    {{-- Js Validation --}}
+    <script src="{{ asset('Backend/assets/js/validate.min.js') }}"></script>
     <script>
         new PerfectScrollbar(".app-container")
     </script>
@@ -88,6 +90,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     {{-- Toaster Js --}}
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
     {{-- dataTable --}}
     <script src=" {{ asset('Backend/assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
     <script src=" {{ asset('Backend/assets/plugins/datatable/js/dataTables.bootstrap5.min.js') }}"></script>

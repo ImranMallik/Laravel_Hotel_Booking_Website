@@ -61,3 +61,12 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
         Route::get('/delete/team/{id}', 'deleteTeam')->name('delete.team');
     });
 });
+
+// Area Book
+
+Route::middleware(['auth', 'roles:admin'])->group(function () {
+    Route::controller(TeamController::class)->group(function () {
+        Route::get('/book-area', 'bookArea')->name('book-area');
+        Route::post('/update-book-area/{id}', 'updatebookArea')->name('update.book-area');
+    });
+});

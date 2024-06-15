@@ -4,7 +4,7 @@
     <div class="page-content">
         <!--breadcrumb-->
         <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-            <div class="breadcrumb-title pe-3">Add Team</div>
+            <div class="breadcrumb-title pe-3">Add Book Area</div>
             <div class="ps-3">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0 p-0">
@@ -12,7 +12,7 @@
                             <a href="javascript:;"><i class="bx bx-home-alt"></i></a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            Add Team
+                            Add Book Area
                         </li>
                     </ol>
                 </nav>
@@ -26,32 +26,43 @@
 
                     <div class="col-lg-8">
                         <div class="card">
-                            <form id="myForm" action="{{ route('list.store') }}" method="post"
+                            <form id="myForm" action="{{ route('update.book-area', $bookarea->id) }}" method="post"
                                 enctype="multipart/form-data">
                                 @csrf
                                 <div class="card-body">
                                     <div class="row mb-3">
                                         <div class="col-sm-3">
-                                            <h6 class="mb-0">Name</h6>
+                                            <h6 class="mb-0">Short Title</h6>
                                         </div>
                                         <div class="col-sm-9 form-group text-secondary">
-                                            <input type="text" name="name" class="form-control" value="" />
+                                            <input type="text" name="short_title" value="{{ $bookarea->short_title }}"
+                                                class="form-control" value="" />
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col-sm-3">
-                                            <h6 class="mb-0">Position</h6>
+                                            <h6 class="mb-0">Main Title</h6>
                                         </div>
                                         <div class="col-sm-9 form-group text-secondary">
-                                            <input type="text" class="form-control" name="position" value="" />
+                                            <input type="text" class="form-control" name="main_title"
+                                                value="{{ $bookarea->main_title }}" />
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col-sm-3">
-                                            <h6 class="mb-0">Facebook</h6>
+                                            <h6 class="mb-0">Short Description</h6>
                                         </div>
                                         <div class="col-sm-9 form-group text-secondary">
-                                            <input type="text" name="facebook" class="form-control" value="" />
+                                            <textarea class="form-control" id="input40" name="short_desc" rows="3" placeholder="Description">{{ $bookarea->short_desc }}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-sm-3">
+                                            <h6 class="mb-0">Link URL</h6>
+                                        </div>
+                                        <div class="col-sm-9 form-group text-secondary">
+                                            <input type="text" class="form-control" value="{{ $bookarea->link_url }}"
+                                                name="link_url" value="" />
                                         </div>
                                     </div>
 
@@ -69,8 +80,9 @@
                                             <h6 class="mb-0"> </h6>
                                         </div>
                                         <div class="col-sm-9 text-secondary">
-                                            <img id="showImage" src=" {{ url('upload/no_image.jpg') }}" alt="Admin"
-                                                class="rounded-circle p-1 bg-primary" width="80" />
+                                            <img id="showImage"
+                                                src=" {{ !empty($bookarea->image) ? url('upload/bookarea/' . $bookarea->image) : url('upload/no_image.jpg') }}"
+                                                alt="Admin" class="rounded-circle p-1 bg-primary" width="80" />
 
                                         </div>
                                     </div>
@@ -101,17 +113,20 @@
             });
         });
     </script>
-    <script type="text/javascript">
+    {{-- <script type="text/javascript">
         $(document).ready(function() {
             $('#myForm').validate({
                 rules: {
-                    name: {
+                    short_title: {
                         required: true,
                     },
-                    position: {
+                    main_title: {
                         required: true,
                     },
-                    facebook: {
+                    short_desc: {
+                        required: true,
+                    },
+                    link_url: {
                         required: true,
                     },
                     image: {
@@ -120,14 +135,17 @@
 
                 },
                 messages: {
-                    name: {
-                        required: 'Please Enter TeamName',
+                    short_title: {
+                        required: 'Please Enter Short Title',
                     },
-                    position: {
-                        required: 'Please Enter Position Fild',
+                    main_title: {
+                        required: 'Please Enter Main Title',
                     },
-                    facebook: {
-                        required: 'Please Enter Facebook Url',
+                    short_desc: {
+                        required: 'Please Enter Short Deccription',
+                    },
+                    link_url: {
+                        required: 'Please Enter Link Url',
                     },
                     image: {
                         required: 'Please Enter Image'
@@ -148,5 +166,5 @@
                 },
             });
         });
-    </script>
+    </script> --}}
 @endsection

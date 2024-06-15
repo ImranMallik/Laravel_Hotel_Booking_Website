@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\BookArea;
 use App\Models\Team;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -130,5 +131,67 @@ class TeamController extends Controller
         );
 
         return redirect()->back()->with($notification);
+    }
+
+    // Book Area-------------
+
+    public function bookArea()
+    {
+        $bookarea = BookArea::find(1);
+        return view('backend.Bookarea.index', compact('bookarea'));
+    }
+
+    public function updatebookArea(Request $request, $id)
+    {
+        // dd($request->id);
+
+        // $book_id = BookArea::find($id);
+        // dd($book_id);
+
+        if ($request->file('image')) {
+            if ($request->file('image')) {
+                $image = new ImageManager(new Driver());
+                $nam_gen = hexdec(uniqid()) . '.' . $request->file('image')->getClientOriginalExtension();
+                $img = $image->read($request->file('image'));
+                $directory = 'upload/bookarea/';
+                $img = $img->resize(1000, 1000)->save(public_path($directory . $nam_gen));
+                // $img->toJpeg(100)->save(public_path($directory . $nam_gen));
+                $save_url =  $nam_gen;
+            }
+
+            BookArea::findOrFail($id)->update([
+                'short_title' => $request->short_title,
+                'main_title' => $request->main_title,
+                'short_desc' => $request->short_desc,
+                'link_url' => $request->link_url,
+                'image' => $save_url,
+                // 'created_at' => Carbon::now(),
+            ]);
+
+            $notification = array(
+
+                'message' => 'Book Updated With Image Successfully ',
+                'alert-type' => 'success'
+
+            );
+
+            return redirect()->back()->with($notification);
+        } else {
+            BookArea::findOrFail($id)->update([
+                'short_title' => $request->short_title,
+                'main_title' => $request->main_title,
+                'short_desc' => $request->short_desc,
+                'link_url' => $request->link_url,
+            ]);
+
+            $notification = array(
+
+                'message' => 'Book Area Update With Out Image ',
+                'alert-type' => 'success'
+
+            );
+
+            return redirect()->back()->with($notification);
+        }
     }
 }
