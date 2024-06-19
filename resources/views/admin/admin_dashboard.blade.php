@@ -29,6 +29,9 @@
     <link href="{{ asset('Backend/assets/plugins/datatable/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
     {{-- Toatser --}}
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">
+
     <title>Hotel || Booking || Admin-Dashboard</title>
 </head>
 
@@ -94,6 +97,9 @@
     {{-- dataTable --}}
     <script src=" {{ asset('Backend/assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
     <script src=" {{ asset('Backend/assets/plugins/datatable/js/dataTables.bootstrap5.min.js') }}"></script>
+    {{-- Summer note --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
+    {{-- toaster --}}
     <script>
         $(document).ready(function() {
             $('#example').DataTable();
@@ -121,6 +127,17 @@
                     break;
             }
         @endif
+    </script>
+    {{-- summer Not --}}
+    <script>
+        $(document).ready(function() {
+            $('#summernote').summernote({
+                height: 300, // set editor height
+                minHeight: null, // set minimum height of editor
+                maxHeight: null, // set maximum height of editor
+                focus: true // set focus to editable area after initializing summernote
+            });
+        });
     </script>
 </body>
 

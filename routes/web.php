@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Backend\AdminController;
+use App\Http\Controllers\Backend\RoomController;
+use App\Http\Controllers\Backend\RoomTypeController;
 use App\Http\Controllers\Backend\TeamController;
 use App\Http\Controllers\Frontend\UserController;
 use App\Http\Controllers\ProfileController;
@@ -47,6 +49,7 @@ Route::group(['middleware' => ['auth', 'roles:admin'], 'prefix' => 'admin', 'as'
     Route::post('admin/profile/stote', [AdminController::class, 'profileStore'])->name('profile-store');
     Route::get('password/change', [AdminController::class, 'changePassword'])->name('password-change');
     Route::post('password/update', [AdminController::class, 'updatePassword'])->name('password-update');
+    // Team Route
 });
 
 Route::get('admin/login', [AdminController::class, 'index'])->name('admin.login');
@@ -68,5 +71,20 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
     Route::controller(TeamController::class)->group(function () {
         Route::get('/book-area', 'bookArea')->name('book-area');
         Route::post('/update-book-area/{id}', 'updatebookArea')->name('update.book-area');
+    });
+});
+// Room Type list
+Route::middleware(['auth'])->group(function () {
+    Route::controller(RoomTypeController::class)->group(function () {
+        Route::get('/room/type/list', 'roomlypelist')->name('room.type-list');
+        Route::get('/add/room/type', 'AddRoomType')->name('add.room-type');
+        Route::post('/room/type/store', 'RoomTypeStore')->name('room.type-store');
+    });
+});
+// Room
+Route::middleware(['auth'])->group(function () {
+    Route::controller(RoomController::class)->group(function () {
+        Route::get('/edit/room/{id}', 'editRoom')->name('edit.room');
+        Route::post('/update/room/{id}', 'updateRoom')->name('update.room');
     });
 });
