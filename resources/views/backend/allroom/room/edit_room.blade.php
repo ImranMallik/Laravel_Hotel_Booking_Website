@@ -62,7 +62,8 @@
                                                         id="image" />
                                                     <img id="showImage"
                                                         src="{{ !empty($editData->image) ? url('upload/rooming/' . $editData->image) : url('upload/no_image.jpg') }}"
-                                                        alt="Admin" class="bg-primary mt-2" width="60" />
+                                                        alt="Admin" class="bg-primary mt-2" width="70"
+                                                        height="50" />
 
 
                                                 </div>
@@ -71,7 +72,14 @@
                                                     <input type="file" name="multi_img[]" class="form-control"
                                                         id="multiImg" multiple
                                                         accept="image/jpeg, image/jpg, image/gif, image/png">
-
+                                                    @foreach ($multiImg as $mul_img)
+                                                        <img id="showImage"
+                                                            src="{{ !empty($mul_img->multi_img) ? url('upload/rooming/multi_img/' . $mul_img->multi_img) : url('upload/no_image.jpg') }}"
+                                                            alt="Admin" class="bg-primary mt-2" width="60"
+                                                            height="50" />
+                                                        <a href="{{ route('multi-img.delet', $mul_img->id) }}"><i
+                                                                class="lni lni-close"></i></a>
+                                                    @endforeach
                                                     <div class="row" id="preview_img"></div>
 
                                                 </div>
@@ -99,17 +107,27 @@
                                                     <label for="input7" class="form-label">Room View</label>
                                                     <select id="input7" name="view" class="form-select">
                                                         <option selected="">Choose...</option>
-                                                        <option value="see view">See View</option>
-                                                        <option value="Hill view">Hill View</option>
+                                                        <option
+                                                            value="see view"{{ $editData->view == 'see view' ? 'selected' : '' }}>
+                                                            See View</option>
+                                                        <option value="Hill view"
+                                                            {{ $editData->view == 'Hill view' ? 'selected' : '' }}>Hill
+                                                            View</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="input7" class="form-label">Bed Style</label>
                                                     <select id="input7" name="bed style" class="form-select">
                                                         <option selected="">Choose...</option>
-                                                        <option value="king bed">King Bed</option>
-                                                        <option value="twin bed">Twin Bed</option>
-                                                        <option value="queen bed">Queen Bed</option>
+                                                        <option value="king bed"
+                                                            {{ $editData->bed_style == 'king bed' ? 'selected' : '' }}>King
+                                                            Bed</option>
+                                                        <option value="twin bed"
+                                                            {{ $editData->bed_style == 'twin bed' ? 'selected' : '' }}>Twin
+                                                            Bed</option>
+                                                        <option value="queen bed"
+                                                            {{ $editData->bed_style == 'queen bed' ? 'selected' : '' }}>
+                                                            Queen Bed</option>
                                                     </select>
                                                 </div>
 
@@ -193,7 +211,7 @@
                                                                                     class="lni lni-circle-plus"></i></a>
                                                                             <span
                                                                                 class="btn btn-danger btn-sm removeeventmore"><i
-                                                                                    class="fa fa-minus-circle"></i></span>
+                                                                                    class="lni lni-circle-minus"></i></span>
                                                                         </div>
                                                                     </div>
                                                                 </div>

@@ -18,8 +18,9 @@ class RoomController extends Controller
     {
         $editData = Room::findOrFail($id);
         $basic_facility = Facility::where('rooms_id', $id)->get();
+        $multiImg = MultiImage::where('rooms_id', $id)->get();
 
-        return view('backend.allroom.room.edit_room', compact('editData', 'basic_facility'));
+        return view('backend.allroom.room.edit_room', compact('editData', 'basic_facility', 'multiImg'));
     }
 
     public function updateRoom(Request $request, $id)
@@ -92,6 +93,39 @@ class RoomController extends Controller
             'message' => 'Room updated Successfully!!',
             'alert-type' => 'success'
 
+        );
+
+        return redirect()->back()->with($notification);
+    }
+
+    // multi imgage Delete using Icon
+
+    public function multiImgDelet($id)
+    {
+
+        $deleteImg = MultiImage::where('id', $id)->first();
+
+        if ($deleteImg) {
+            // Construct the full path to the image file
+            $imagePath = public_path('upload/rooming/multi_img/' . $deleteImg->multi_img);
+
+            // Debugging line to check the constructed path (optional)
+            // dd($imagePath);
+
+            // Check if the file exists before attempting to delete it
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            } else {
+                echo "Image does not exist";
+            }
+
+            // Delete the image record from the database
+            MultiImage::where('id', $id)->delete();
+        }
+
+        $notification = array(
+            'message' => 'Multi Image Deleted Successfully!!',
+            'alert-type' => 'success'
         );
 
         return redirect()->back()->with($notification);

@@ -1,7 +1,7 @@
 <div class="navbar-area">
     <!-- Menu For Mobile Device -->
     <div class="mobile-nav">
-        <a href="index.html" class="logo">
+        <a href="{{ route('dashboard') }}" class="logo">
             <img src="assets/img/logos/logo-1.png" class="logo-one" alt="Logo" />
             <img src="assets/img/logos/footer-logo1.png" class="logo-two" alt="Logo" />
         </a>
@@ -11,7 +11,7 @@
     <div class="main-nav">
         <div class="container">
             <nav class="navbar navbar-expand-md navbar-light">
-                <a class="navbar-brand" href="index.html">
+                <a class="navbar-brand" href="{{ route('dashboard') }}">
                     <img src="{{ asset('Frontend/assets/img/logos/logo-1.png') }}" class="logo-one" alt="Logo" />
                     <img src="{{ asset('Frontend/assets/img/logos/footer-logo1.png') }}" class="logo-two"
                         alt="Logo" />

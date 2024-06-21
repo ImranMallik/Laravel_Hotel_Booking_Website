@@ -25,6 +25,7 @@
                         </thead>
                         <tbody>
                             @foreach ($alldata as $index => $item)
+                                {{-- @dd($item) --}}
                                 @php
                                     $rooms = App\Models\Room::where('room_type_id', $item->id)->get();
                                     // @dd($rooms);
@@ -32,7 +33,7 @@
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
                                     <td>
-                                        <img src="{{ !empty($item->room->image) ? url('upload/roomimg/' . $item->room->image) : url('upload/no_image.jpg') }}"
+                                        <img src="{{ !empty($item->room->image) ? url('upload/rooming/' . $item->room->image) : url('upload/no_image.jpg') }}"
                                             alt="" style="width: 50px;height:50px">
                                     </td>
                                     <td>{{ $item->name }}</td>
