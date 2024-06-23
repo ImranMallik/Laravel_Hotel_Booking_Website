@@ -1,19 +1,43 @@
+<style>
+    .highlighted-text {
+        /* background-color: ; */
+        font-weight: bold;
+        color: rgb(135, 135, 42);
+    }
+
+    .moving-text {
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        box-sizing: border-box;
+        animation: marquee 10s linear infinite;
+    }
+
+    @keyframes marquee {
+        0% {
+            transform: translateX(100%);
+        }
+
+        100% {
+            transform: translateX(-100%);
+        }
+    }
+</style>
+
+
 <header class="top-header top-header-bg">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-3 col-md-2 pr-0">
-                <div class="language-list">
-                    <select class="language-list-item">
-                        <option>English</option>
-                        <option>العربيّة</option>
-                        <option>Deutsch</option>
-                        <option>Português</option>
-                        <option>简体中文</option>
-                    </select>
-                </div>
+
+                <span class="mt-3 moving-text highlighted-text">This WebSite Created By - Imran Mallik Only Practice
+                    Purpose</span>
             </div>
 
             <div class="col-lg-9 col-md-10">
+
+
+
                 <div class="header-right">
                     <ul>
                         <li>

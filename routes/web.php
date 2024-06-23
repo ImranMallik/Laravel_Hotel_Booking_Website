@@ -4,6 +4,7 @@ use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\RoomController;
 use App\Http\Controllers\Backend\RoomTypeController;
 use App\Http\Controllers\Backend\TeamController;
+use App\Http\Controllers\Frontend\FrontendRoomController;
 use App\Http\Controllers\Frontend\UserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -74,7 +75,7 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
     });
 });
 // Room Type list
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'roles:admin'])->group(function () {
     Route::controller(RoomTypeController::class)->group(function () {
         Route::get('/room/type/list', 'roomlypelist')->name('room.type-list');
         Route::get('/add/room/type', 'AddRoomType')->name('add.room-type');
@@ -82,10 +83,22 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 // Room
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'roles:admin'])->group(function () {
     Route::controller(RoomController::class)->group(function () {
         Route::get('/edit/room/{id}', 'editRoom')->name('edit.room');
+        Route::get('/delete/room/{id}', 'deleteRoom')->name('delete.room-type');
         Route::post('/update/room/{id}', 'updateRoom')->name('update.room');
         Route::get('multiImg-delete/{id}', 'multiImgDelet')->name('multi-img.delet');
+        Route::post('add/room-number/{id}', 'addRoomNumber')->name('add.room-name');
+        // Edit Room Id
+        Route::get('/edit/room-number/{id}', 'editRoomId')->name('edit.room-number');
+        Route::post('/edit/room-number/{id}', 'updateRoomNumber')->name('update.room-num');
+        Route::get('/delete/room-number/{id}', 'deleteRoomNumber')->name('delete.room-number');
     });
+});
+
+// Room Route Frontend
+Route::controller(FrontendRoomController::class)->group(function () {
+    Route::get('rooms/list', 'AllFrontendRoom')->name('froom.all');
+    Route::get('rooms/list/details/{id}', 'AllRoomDtails')->name('room-details');
 });

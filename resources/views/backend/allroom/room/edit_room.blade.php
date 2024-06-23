@@ -279,15 +279,68 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="primaryprofile" role="tabpanel">
-                                    <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee
-                                        squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes
-                                        anderson artisan four loko farm-to-table craft beer twee. Qui photo booth
-                                        letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl
-                                        cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit.
-                                        Keytar helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan
-                                        fanny pack odio cillum wes anderson 8-bit, sustainable jean shorts beard ut DIY
-                                        ethical culpa terry richardson biodiesel. Art party scenester stumptown, tumblr
-                                        butcher vero sint qui sapiente accusamus tattooed echo park.</p>
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <a href="#" onclick="addRoomNo()"
+                                                class="card-title btn
+                                                btn-primary float-right"
+                                                id="addRoomNo"><i class="lni lni-plus">Add
+                                                    New</i></a>
+                                            <div class="roomnoHide" id="roomnoHide">
+                                                <form action="{{ route('add.room-name', $editData->id) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    <div class="row">
+                                                        <input type="hidden" name="room_type_id"
+                                                            value="{{ $editData->room_type_id }}">
+                                                        <div class="col-md-4">
+                                                            <label for="roomNo" class="form-label">Room No</label>
+                                                            <input type="text" class="form-control" name="room_no"
+                                                                id="roomNo">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label for="status" class="form-label">Status</label>
+                                                            <select name="status" class="form-select" id="status">
+                                                                <option selected="">Select Status...</option>
+                                                                <option value="active">Active</option>
+                                                                <option value="inactive">Inactive</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="col-md-4">
+                                                            <button type="submit" class="btn btn-success"
+                                                                style="margin-top:28px">Save</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <table class="table table-striped" id="roomView">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Room Number</th>
+                                                        <th scope="col">Status</th>
+                                                        <th scope="col">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($allrooms as $rooms)
+                                                        <tr>
+                                                            <td>{{ $rooms->room_no }}</td>
+                                                            <td>{{ $rooms->status }}</td>
+                                                            <td>
+                                                                <a href="{{ route('edit.room-number', $rooms->id) }}"
+                                                                    class="btn btn-info px-3 radius-30">Edit</a>
+                                                                <a href="{{ route('delete.room-number', $rooms->id) }}"
+                                                                    class="btn btn-danger px-3 radius-30"
+                                                                    id="deleteTeam">Delete</a>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
 
                             </div>
@@ -390,4 +443,15 @@
         });
     </script>
     <!--========== End of Basic Plan Facilities ==============-->
+
+    <script>
+        $('#roomView').show();
+        $('#roomnoHide').hide();
+
+        function addRoomNo() {
+            $('#roomnoHide').show();
+            $('#roomView').hide();
+            $('#addRoomNo').hide();
+        }
+    </script>
 @endsection
