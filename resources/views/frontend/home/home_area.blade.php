@@ -18,7 +18,7 @@
                          <div class="row align-items-center">
                              <div class="col-lg-5 col-md-4 p-0">
                                  <div class="room-card-img">
-                                     <a href="room-details.html">
+                                     <a href="{{ route('room-details', $room->id) }}">
                                          <img src="{{ asset('upload/rooming/' . $room->image) }}" alt="Images" />
                                      </a>
                                  </div>
@@ -27,7 +27,8 @@
                              <div class="col-lg-7 col-md-8 p-0">
                                  <div class="room-card-content">
                                      <h3>
-                                         <a href="room-details.html">{{ $room['type']['name'] }}</a>
+                                         <a
+                                             href="{{ route('room-details', $room->id) }}">{{ $room['type']['name'] }}</a>
                                      </h3>
                                      <span>{{ $room->price }} / Per Night </span>
                                      <div class="rating">

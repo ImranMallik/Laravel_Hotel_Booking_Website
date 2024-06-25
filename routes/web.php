@@ -38,7 +38,7 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__ . '/auth.php';
 // 
-Route::get('/', [UserController::class, 'index']);
+Route::get('/', [UserController::class, 'index'])->name('index');
 
 
 
@@ -101,4 +101,5 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 Route::controller(FrontendRoomController::class)->group(function () {
     Route::get('rooms/list', 'AllFrontendRoom')->name('froom.all');
     Route::get('rooms/list/details/{id}', 'AllRoomDtails')->name('room-details');
+    Route::get('bookings', 'BookingSearch')->name('booking.search');
 });

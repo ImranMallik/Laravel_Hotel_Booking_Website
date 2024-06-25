@@ -11,7 +11,7 @@
     <div class="main-nav">
         <div class="container">
             <nav class="navbar navbar-expand-md navbar-light">
-                <a class="navbar-brand" href="{{ route('dashboard') }}">
+                <a class="navbar-brand" href="{{ route('index') }}">
                     <img src="{{ asset('Frontend/assets/img/logos/logo-1.png') }}" class="logo-one" alt="Logo" />
                     <img src="{{ asset('Frontend/assets/img/logos/footer-logo1.png') }}" class="logo-two"
                         alt="Logo" />

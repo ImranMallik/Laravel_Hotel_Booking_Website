@@ -28,7 +28,7 @@
                 @foreach ($rooms as $room)
                     <div class="col-lg-4 col-md-6">
                         <div class="room-card">
-                            <a href="room-details.html">
+                            <a href="{{ route('room-details', $room->id) }}">
                                 <img src="{{ asset('upload/rooming/' . $room->image) }}" alt="Images"
                                     style="width:550px;height:300px">
                             </a>

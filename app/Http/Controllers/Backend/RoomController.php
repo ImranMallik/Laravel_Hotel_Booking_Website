@@ -76,6 +76,7 @@ class RoomController extends Controller
         $room->discount = $request->room_discount;
         $room->short_desc = $request->shot_desc;
         $room->long_desc = $request->long_desc;
+        $room->status = 1;
         // Update Image
         if ($request->file('image')) {
             $image = new ImageManager(new Driver());
