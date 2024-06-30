@@ -1,5 +1,6 @@
 @extends('frontend.master')
 @section('content')
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- Inner Banner -->
     <div class="inner-banner inner-bg10">
         <div class="container">
@@ -25,14 +26,17 @@
                     <div class="room-details-side">
                         <div class="side-bar-form">
                             <h3>Booking Sheet</h3>
-                            <form>
+                            <form action="{{ route('checkout.book') }}" method="POST" id="bk_form">
+                                @csrf
+                                <input type="hidden" name="room_id" value="{{ $roomDetails->id }}">
                                 <div class="row align-items-center">
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <label>Check in</label>
                                             <div class="input-group">
-                                                <input autocomplete="off" required name="check_in" type="text"
-                                                    class="form-control dt_picker" placeholder="YY-MM-DD" />
+                                                <input autocomplete="off" id="check_in" name="check_in" type="text"
+                                                    class="form-control dt_picker" placeholder="YY-MM-DD"
+                                                    value="{{ old('check_in') ? date('Y-m-d', strtotime(old('check_in'))) : '' }}" />
                                                 <span class="input-group-addon"></span>
                                             </div>
                                             <i class="bx bxs-calendar"></i>
@@ -43,8 +47,9 @@
                                         <div class="form-group">
                                             <label>Check Out</label>
                                             <div class="input-group">
-                                                <input autocomplete="off" required name="check_out" type="text"
-                                                    class="form-control dt_picker" placeholder="YY-MM-DD" />
+                                                <input autocomplete="off" id="check_out" name="check_out" type="text"
+                                                    class="form-control dt_picker" placeholder="YY-MM-DD"
+                                                    value="{{ old('check_out') ? date('Y-m-d', strtotime(old('check_out'))) : '' }}" />
                                                 <span class="input-group-addon"></span>
                                             </div>
                                             <i class="bx bxs-calendar"></i>
@@ -54,29 +59,89 @@
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <label>Numbers of Persons</label>
-                                            <select class="form-control">
-                                                <option>01</option>
-                                                <option>02</option>
-                                                <option>03</option>
-                                                <option>04</option>
-                                                <option>05</option>
+                                            <select name="persion" id="num_persion" class="form-control">
+                                                @for ($i = 1; $i <= 4; $i++)
+                                                    <option {{ old('persion') == $i ? 'selected' : '' }}
+                                                        value="0{{ $i }}">0{{ $i }} </option>
+                                                @endfor
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                    <input type="hidden" id="total_adult" value="{{ $roomDetails->total_adult }}">
+                                    <input type="hidden" id="room_price" value="{{ $roomDetails->price }}">
+                                    <input type="hidden" id="total_discount" value="{{ $roomDetails->discount }}">
+                                    <div class="col-lg-12">
+                                        @php
+                                            $roomsNumbers = App\Models\RoomNumber::where(
+                                                'room_id',
+                                                $roomDetails->id,
+                                            )->get();
+                                            $roomsCount = $roomsNumbers->count();
+                                            // @dd($roomsCount);
+
+                                            // $roomsSum = $roomsNumbers->sum('room_id');
+                                        @endphp
+                                        <div class="form-group">
+                                            <label>Rooms Availablity :</label>
+                                            <select name="num_of_ava" class="form-control " ">
+                                                    <option value="{{ $roomsCount }}">{{ $roomsCount }}</option>
+
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <label>Numbers of Rooms</label>
+                                                <select name="num_of_room" class="form-control number_of_room">
+                                                     @for ($i=1; $i <=$roomsCount;
+                                                $i++)
+                                                <option value="{{ $i }}">{{ sprintf('%02d', $i) }}</option>
+                                                @endfor
                                             </select>
                                         </div>
                                     </div>
 
                                     <div class="col-lg-12">
-                                        <div class="form-group">
-                                            <label>Numbers of Rooms</label>
-                                            <select class="form-control">
-                                                <option>01</option>
-                                                <option>02</option>
-                                                <option>03</option>
-                                                <option>04</option>
-                                                <option>05</option>
-                                            </select>
-                                        </div>
+                                        <table class="table">
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <p>SubTotal</p>
+                                                    </td>
+                                                    <td style="text-align: right"><span
+                                                            class="t_subtotal">₹{{ $roomDetails->price }}</span></td>
+                                                </tr>
+                                                @php
+                                                    $roomDetailsDiscount =
+                                                        ($roomDetails->price * $roomDetails->discount) / 100;
+                                                @endphp
+                                                <tr>
+                                                    <td>
+                                                        <p>Discount</p>
+                                                    </td>
+                                                    <td style="text-align: right">
+                                                        <p class="t_discount">
+                                                            {{ $roomDetails->discount }}%
+                                                            ( - ₹{{ number_format($roomDetailsDiscount, 2) }})
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <p>Total</p>
+                                                    </td>
+                                                    @php
+                                                        $total = $roomDetails->price - $roomDetailsDiscount;
+                                                    @endphp
+                                                    <td style="text-align: right">
+                                                        <p class="t_g_total">₹{{ $total }}</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
-
                                     <div class="col-lg-12 col-md-12">
                                         <button type="submit" class="default-btn btn-bg-three border-radius-5">
                                             Book Now
@@ -184,7 +249,7 @@
                                 <div class="row">
                                     <div class="col-lg-12 col-md-12">
                                         <div class="form-group">
-                                            <textarea name="message" class="form-control" cols="30" rows="8" required data-error="Write your message"
+                                            <textarea name="message" class="form-control" cols="30" rows="8" data-error="Write your message"
                                                 placeholder="Write your review here.... "></textarea>
                                         </div>
                                     </div>
@@ -265,5 +330,11 @@
             </div>
         </div>
     </div>
-    <!-- Room Details Other End -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $('.number_of_room').on('change', function() {
+            alert('You selected ' + $(this).val() + ' rooms');
+        });
+    </script>
 @endsection

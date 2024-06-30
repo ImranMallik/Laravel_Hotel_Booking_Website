@@ -44,12 +44,14 @@
                     @if ($av_room > 0 && old('persion') <= $room->total_adult)
                         <div class="col-lg-4 col-md-6">
                             <div class="room-card">
-                                <a href="{{ route('room-details', $room->id) }}">
+                                <a
+                                    href="{{ route('search.room-details', $room->id . '?check_in=' . old('check_in') . '&check_out=' . old('check_out') . '&persion=' . old('persion')) }}">
                                     <img src="{{ asset('upload/rooming/' . $room->image) }}" alt="Images"
                                         style="width:550px;height:300px">
                                 </a>
                                 <div class="content">
-                                    <h6><a href="{{ route('room-details', $room->id) }}">{{ $room['type']['name'] }}</a>
+                                    <h6><a
+                                            href="{{ route('search.room-details', $room->id . '?check_in=' . old('check_in') . '&check_out=' . old('check_out') . '&persion=' . old('persion')) }}">{{ $room['type']['name'] }}</a>
                                     </h6>
                                     <ul>
                                         <li class="text-color">₹{{ $room->price }}</li>

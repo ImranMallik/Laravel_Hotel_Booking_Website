@@ -4,6 +4,7 @@ use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\RoomController;
 use App\Http\Controllers\Backend\RoomTypeController;
 use App\Http\Controllers\Backend\TeamController;
+use App\Http\Controllers\Frontend\BookingController;
 use App\Http\Controllers\Frontend\FrontendRoomController;
 use App\Http\Controllers\Frontend\UserController;
 use App\Http\Controllers\ProfileController;
@@ -102,4 +103,15 @@ Route::controller(FrontendRoomController::class)->group(function () {
     Route::get('rooms/list', 'AllFrontendRoom')->name('froom.all');
     Route::get('rooms/list/details/{id}', 'AllRoomDtails')->name('room-details');
     Route::get('bookings', 'BookingSearch')->name('booking.search');
+    Route::get('search/room/details/{id}', 'searchRoomDetails')->name('search.room-details');
+});
+
+
+Route::middleware(['auth'])->group(function () {
+    // CheckOut
+    Route::controller(BookingController::class)->group(function () {
+        Route::get('checkout', 'checkout')->name('checkout');
+        Route::post('booking/store', 'BookingStore')->name('checkout.book');
+        Route::post('checkout/store', 'checkoutStore')->name('checkout.store');
+    });
 });
