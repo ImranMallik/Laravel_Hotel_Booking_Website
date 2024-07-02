@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Backend\AdminController;
+use App\Http\Controllers\Backend\BookingListController;
 use App\Http\Controllers\Backend\RoomController;
 use App\Http\Controllers\Backend\RoomTypeController;
 use App\Http\Controllers\Backend\TeamController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\Frontend\BookingController;
 use App\Http\Controllers\Frontend\FrontendRoomController;
 use App\Http\Controllers\Frontend\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Models\BookingRoomList;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -51,7 +53,6 @@ Route::group(['middleware' => ['auth', 'roles:admin'], 'prefix' => 'admin', 'as'
     Route::post('admin/profile/stote', [AdminController::class, 'profileStore'])->name('profile-store');
     Route::get('password/change', [AdminController::class, 'changePassword'])->name('password-change');
     Route::post('password/update', [AdminController::class, 'updatePassword'])->name('password-update');
-    // Team Route
 });
 
 Route::get('admin/login', [AdminController::class, 'index'])->name('admin.login');
@@ -64,6 +65,14 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
         Route::get('/edit/team/{id}', 'editTeam')->name('edit.team');
         Route::post('/update/team/', 'updateTeam')->name('update.team');
         Route::get('/delete/team/{id}', 'deleteTeam')->name('delete.team');
+    });
+    // Admin BookingList Controller
+    Route::controller(BookingListController::class)->group(function () {
+        Route::get('booking/list', 'bookingList')->name('booking.list');
+        Route::get('edit/booking/list/{id}', 'editBookingList')->name('edit.booking');
+        Route::post('update/booking/status/{id}', 'updateBookingStatus')->name('update.booking.status');
+        Route::post('update/booking/{id}', 'UpdateBooking')->name('update.booking');
+        Route::post('assign_room/{id}', 'assignRoom')->name('assing_room');
     });
 });
 
@@ -113,5 +122,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('checkout', 'checkout')->name('checkout');
         Route::post('booking/store', 'BookingStore')->name('checkout.book');
         Route::post('checkout/store', 'checkoutStore')->name('checkout.store');
+        Route::match(['get', 'post'], '/stripe_pay', 'stripe_pay')->name('stripe_pay');
     });
 });

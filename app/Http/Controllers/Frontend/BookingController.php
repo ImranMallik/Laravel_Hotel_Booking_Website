@@ -11,6 +11,8 @@ use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Stripe;
+use Stripe\Stripe as StripeStripe;
 
 // use Illuminate\Support\Facades\Log;
 
@@ -70,6 +72,7 @@ class BookingController extends Controller
     public function checkoutStore(Request $request)
     {
         // dd($request->all());
+        // dd(env('STRIPE_SECRET'));
         $request->validate([
             'country' => 'required',
             'name' => 'required',
@@ -94,6 +97,33 @@ class BookingController extends Controller
         $code = rand(000000000, 999999999);
         // print_r($code);
         // die;
+
+        if ($request->payment_method == 'stripe') {
+            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+            $s_pay = \Stripe\Charge::create([
+                "amount" => $total_price,
+                "currency" => "inr",
+                "source" => $request->stripeToken,
+                "description" => "Payment For Booking. Booking No " . $code
+            ]);
+            if ($s_pay['status'] == 'succeeded') {
+                $payment_status = 1;
+                $transation_id = $s_pay->id;
+            } else {
+                $notification = array(
+
+                    'message' => 'Sorry Payment Field ',
+                    'alert-type' => 'error'
+
+                );
+
+                return redirect('/')->with($notification);
+            }
+        } else {
+            $payment_status = 0;
+            $transation_id = '';
+        }
+
 
         $bookData = new Booking();
         $bookData->rooms_id = $room->id;

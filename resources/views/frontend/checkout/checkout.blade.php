@@ -158,12 +158,18 @@
                                             </td>
                                         </tr>
                                         @php
+                                            $check_in = \Carbon\Carbon::parse($book_data['check_in']);
+                                            $check_out = \Carbon\Carbon::parse($book_data['check_out']);
+                                            $total_nights = $check_in->diffInDays($check_out); // Use diffInDays instead of diffInNights
+
                                             $numOfRooms = $book_data['num_of_room'];
                                             $roomPrice = $room->price;
-                                            $subtotal = $numOfRooms * $roomPrice;
+                                            $subtotal = $numOfRooms * $roomPrice * $total_nights;
+                                            // dd($subtotal);
 
-                                            // Calculate total discount for the selected number of rooms
-                                            $roomDetailsDiscount = (($roomPrice * $room->discount) / 100) * $numOfRooms;
+                                            // Calculate total discount for the selected number of rooms and nights
+                                            $roomDetailsDiscount =
+                                                (($roomPrice * $room->discount) / 100) * $numOfRooms * $total_nights;
                                             $total = $subtotal - $roomDetailsDiscount;
                                         @endphp
                                         <tr>
@@ -285,6 +291,9 @@
 
 
     <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+    {{-- <script>
+        console.log("Stripe Publishable Key: {{ env('STRIPE_KEY') }}");
+    </script> --}}
 
     <script type="text/javascript">
         $(document).ready(function() {
