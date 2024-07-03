@@ -151,6 +151,29 @@
                             <div style="clear: both"></div>
                             <div style="margin-top: 40px; margin-bottom:20px;">
                                 <a href="javascript:void(0)" class="btn btn-primary assign_room">Assign Room</a>
+
+                                @php
+                                    $assign_room = App\Models\BookingRoomList::with('room_number')
+                                        ->where('booking_id', $editData->id)
+                                        ->get();
+                                @endphp
+                                @if (count($assign_room) > 0)
+                                    <table class="table table-bordered mt-2">
+                                        <tr>
+                                            <th>Room Number</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        @foreach ($assign_room as $ass_room)
+                                            <tr>
+                                                <td>{{ $ass_room->room_number->room_no }}</td>
+                                                <td><a href="{{ route('assing_room_delele', $ass_room->id) }}"
+                                                        id="deleteTeam" class="btn btn-danger">Delete</a></td>
+                                            </tr>
+                                        @endforeach
+                                    </table>
+                                @else
+                                    <div class="alert alert-danger text-center mt-2">Not Found Assign Room</div>
+                                @endif
                             </div>
                         </div>
                         <form action="{{ route('update.booking.status', $editData->id) }} " method="POST">
@@ -236,14 +259,28 @@
 
                                 <div class="col-md-12 mb-2">
                                     @php
+                                        // $roomsNumbers = App\Models\RoomNumber::where(
+                                        //     'room_id',
+                                        //     $editData->rooms_id,
+                                        // )->get();
+                                        // $roomsCount = $roomsNumbers->count();
                                         $roomsNumbers = App\Models\RoomNumber::where(
                                             'room_id',
                                             $editData->rooms_id,
                                         )->get();
                                         $roomsCount = $roomsNumbers->count();
+
+                                        // Fetch the booking count for these room numbers
+                                        $bookroomCount = App\Models\BookingRoomList::whereIn(
+                                            'room_id',
+                                            $roomsNumbers->pluck('room_id'),
+                                        )->count();
+
+                                        // Calculate availability
+                                        $availability = $roomsCount - $bookroomCount;
                                     @endphp
                                     <label>Availability: <span
-                                            class="text-success availability">{{ $roomsCount }}</span></label>
+                                            class="text-success availability">{{ $availability }}</span></label>
                                 </div>
 
                                 <div class="col-md-12 mb-2">

@@ -73,6 +73,8 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
         Route::post('update/booking/status/{id}', 'updateBookingStatus')->name('update.booking.status');
         Route::post('update/booking/{id}', 'UpdateBooking')->name('update.booking');
         Route::post('assign_room/{id}', 'assignRoom')->name('assing_room');
+        Route::get('assign_room/store/{booking_id}/{room_number_id}', 'assignRoomStore')->name('assign_room_store');
+        Route::get('assign_room/delete/{id}', 'assignRoomDelete')->name('assing_room_delele');
     });
 });
 

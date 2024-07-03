@@ -98,4 +98,44 @@ class BookingListController extends Controller
 
         return view('backend.booking.assing-room', compact('booking', 'room_numbers'));
     }
+    // Store Assing Room List
+
+    public function assignRoomStore($booking_id, $room_number_id)
+    {
+        $booking = Booking::findOrFail($booking_id);
+        $chek_data = BookingRoomList::where('booking_id', $booking_id)->count();
+
+        if ($chek_data < $booking->number_of_rooms) {
+            $assign_data = new BookingRoomList();
+            $assign_data->booking_id = $booking_id;
+            $assign_data->room_id = $booking->rooms_id;
+            $assign_data->room_number_id = $room_number_id;
+            $assign_data->save();
+
+            $notification = array(
+                'message' => 'Room Assign Successfully',
+                'alert-type' => 'success'
+            );
+        } else {
+            $notification = array(
+                'message' => 'Room Already Assign',
+                'alert-type' => 'error'
+            );
+        }
+
+        return redirect()->back()->with($notification);
+    }
+
+    public function assignRoomDelete($id)
+    {
+        $assign_room = BookingRoomList::findOrFail($id);
+        $assign_room->delete();
+
+        $notification = array(
+            'message' => 'Assign Room Deleted Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->back()->with($notification);
+    }
 }
