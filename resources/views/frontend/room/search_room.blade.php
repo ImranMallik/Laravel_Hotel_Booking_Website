@@ -68,9 +68,7 @@
                             </div>
                         </div>
                     @else
-                        @php
-                            $empty_array[] = $room->id;
-                        @endphp
+                        <?php array_push($empty_array, $room->id); ?>
                     @endif
                 @endforeach
 

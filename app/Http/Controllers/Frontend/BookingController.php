@@ -43,20 +43,29 @@ class BookingController extends Controller
     }
     public function BookingStore(Request $request)
     {
-        // dd($request->all());
-        // $request->validate([
-        //     'check_in' => 'required|date',
-        //     'check_out' => 'required|date',
-        //     'persion' => 'required|integer',
-        //     'num_of_room' => 'required|integer'
-        // ]);
 
-        // session()->flush();
+        $validateData = $request->validate([
+            'check_in' => 'required',
+            'check_out' => 'required',
+            'persion' => 'required',
+            'number_of_rooms' => 'required',
+
+        ]);
+
+        if ($request->available_room < $request->number_of_rooms) {
+
+            $notification = array(
+                'message' => 'Something want to wrong!',
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
+        }
+        Session::forget('book_date');
 
         $data = array();
-        $data['num_of_room'] = $request->num_of_room;
+        $data['number_of_rooms'] = $request->number_of_rooms;
         $data['persion'] = $request->persion;
-        $data['num_of_available'] = $request->num_of_ava;
+        $data['available_room'] = $request->available_room;
         $data['check_in'] = date('Y-m-d', strtotime($request->check_in));
         $data['check_out'] = date('Y-m-d', strtotime($request->check_out)); // Corrected line
         $data['room_id'] = $request->room_id;
@@ -90,7 +99,7 @@ class BookingController extends Controller
         $formData = Carbon::parse($book_data['check_out']);
         $total_nights = $toDate->diffInDays($formData);
         $room = Room::findOrFail($book_data['room_id']);
-        $subTotal = $room->price * $total_nights * $book_data['num_of_room'];
+        $subTotal = $room->price * $total_nights * $book_data['number_of_rooms'];
         // dd($subTotal);
         $discount = ($room->discount / 100) * $subTotal;
         $total_price  = $subTotal - $discount;
@@ -98,11 +107,11 @@ class BookingController extends Controller
         // print_r($code);
         // die;
 
-        if ($request->payment_method == 'stripe') {
+        if ($request->payment_method == 'Stripe') {
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
             $s_pay = \Stripe\Charge::create([
-                "amount" => $total_price,
-                "currency" => "inr",
+                "amount" => $total_price * 100,
+                "currency" => "usd",
                 "source" => $request->stripeToken,
                 "description" => "Payment For Booking. Booking No " . $code
             ]);
@@ -131,15 +140,22 @@ class BookingController extends Controller
         $bookData->check_in = date('Y-m-d', strtotime($book_data['check_in']));
         $bookData->check_out = date('Y-m-d', strtotime($book_data['check_out']));
         $bookData->person = $book_data['persion'];
-        $bookData->number_of_rooms = $book_data['num_of_room'];
+        $bookData->number_of_rooms = $book_data['number_of_rooms'];
         $bookData->total_night = $total_nights;
         $bookData->actual_price = $room->price;
         $bookData->subtotal = $subTotal;
         $bookData->discount = $discount;
         $bookData->total_price = $total_price;
         $bookData->payment_method = $request->payment_method;
-        $bookData->transation_id = '';
-        $bookData->payment_status = 0;
+        if ($request->payment_method == 'Stripe') {
+            $bookData->transation_id = $s_pay->id;
+            $bookData->payment_status = 1;
+            $bookData->status = 1;
+        } else {
+            $bookData->transation_id = '';
+            $bookData->payment_status = 0;
+            $bookData->status = 0;
+        }
         $bookData->name = $request->name;
         $bookData->email = $request->email;
         $bookData->phone = $request->phone;
@@ -148,7 +164,6 @@ class BookingController extends Controller
         $bookData->zip_code = $request->zip_code;
         $bookData->address = $request->address;
         $bookData->code = $code;
-        $bookData->status = 0;
         $bookData->created_at = Carbon::now();
         $bookData->save();
 

@@ -21,7 +21,7 @@
     <!-- Checkout Area -->
     <section class="checkout-area pt-100 pb-70">
         <div class="container">
-            <form action="{{ route('checkout.store') }}" method="POST" class="stripe_form require-validation"
+            <form action="{{ route('checkout.store') }}" role="form" method="POST" class="stripe_form require-validation"
                 data-cc-on-file="false" data-stripe-publishable-key="{{ env('STRIPE_KEY') }}">
                 @csrf
                 <div class="row">
@@ -154,7 +154,7 @@
                                                 <p>Total Room</p>
                                             </td>
                                             <td style="text-align: right">
-                                                <p>{{ $book_data['num_of_room'] }}</p>
+                                                <p>{{ $book_data['number_of_rooms'] }}</p>
                                             </td>
                                         </tr>
                                         @php
@@ -162,7 +162,7 @@
                                             $check_out = \Carbon\Carbon::parse($book_data['check_out']);
                                             $total_nights = $check_in->diffInDays($check_out); // Use diffInDays instead of diffInNights
 
-                                            $numOfRooms = $book_data['num_of_room'];
+                                            $numOfRooms = $book_data['number_of_rooms'];
                                             $roomPrice = $room->price;
                                             $subtotal = $numOfRooms * $roomPrice * $total_nights;
                                             // dd($subtotal);
@@ -219,13 +219,10 @@
                         <div class="payment-box">
                             <div class="payment-method">
                                 <p>
-                                    <input type="radio" value="COD" id="cash-on-delivery" name="payment_method">
+                                    <input type="radio" id="cash-on-delivery" name="payment_method" value="COD">
                                     <label for="cash-on-delivery">Cash On Delivery</label>
                                 </p>
-                                {{-- <p>
-                                    <input type="radio" id="paypal" name="radio-group">
-                                    <label for="paypal">PayPal</label>
-                                </p> --}}
+
 
                                 <p>
                                     <input type="radio" class="pay_method" id="stripe" name="payment_method"
@@ -300,6 +297,7 @@
 
             $(".pay_method").on('click', function() {
                 var payment_method = $(this).val();
+                // alert(payment_method);
                 if (payment_method == 'Stripe') {
                     $("#stripe_pay").removeClass('d-none');
                 } else {

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\BookingListController;
 use App\Http\Controllers\Backend\RoomController;
+use App\Http\Controllers\Backend\RoomListController;
 use App\Http\Controllers\Backend\RoomTypeController;
 use App\Http\Controllers\Backend\TeamController;
 use App\Http\Controllers\Frontend\BookingController;
@@ -108,6 +109,13 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
         Route::get('/delete/room-number/{id}', 'deleteRoomNumber')->name('delete.room-number');
     });
 });
+// Room List
+Route::middleware(['auth', 'roles:admin'])->group(function () {
+    Route::controller(RoomListController::class)->group(function () {
+        Route::get('/view/room/list', 'viewRoomList')->name('view.roomlist');
+        Route::get('/add/room/list', 'addRoomList')->name('add.room-list');
+    });
+});
 
 // Room Route Frontend
 Route::controller(FrontendRoomController::class)->group(function () {
@@ -115,6 +123,7 @@ Route::controller(FrontendRoomController::class)->group(function () {
     Route::get('rooms/list/details/{id}', 'AllRoomDtails')->name('room-details');
     Route::get('bookings', 'BookingSearch')->name('booking.search');
     Route::get('search/room/details/{id}', 'searchRoomDetails')->name('search.room-details');
+    Route::get('check_room_availability/', 'CheckRoomAvailability')->name('check_room_availability');
 });
 
 

@@ -26,7 +26,7 @@
                     <div class="room-details-side">
                         <div class="side-bar-form">
                             <h3>Booking Sheet</h3>
-                            <form action="{{ route('checkout.book') }}" method="POST" id="bk_form">
+                            <form action="{{ route('checkout.book', $roomDetails->id) }}" method="POST" id="bk_form">
                                 @csrf
                                 <input type="hidden" name="room_id" value="{{ $roomDetails->id }}">
                                 <div class="row align-items-center">
@@ -55,92 +55,62 @@
                                             <i class="bx bxs-calendar"></i>
                                         </div>
                                     </div>
-
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <label>Numbers of Persons</label>
-                                            <select name="persion" id="num_persion" class="form-control">
+                                            <select class="form-control" name="persion" id="nmbr_person">
                                                 @for ($i = 1; $i <= 4; $i++)
                                                     <option {{ old('persion') == $i ? 'selected' : '' }}
                                                         value="0{{ $i }}">0{{ $i }} </option>
                                                 @endfor
                                             </select>
                                         </div>
-
                                     </div>
                                     <input type="hidden" id="total_adult" value="{{ $roomDetails->total_adult }}">
                                     <input type="hidden" id="room_price" value="{{ $roomDetails->price }}">
-                                    <input type="hidden" id="total_discount" value="{{ $roomDetails->discount }}">
+                                    <input type="hidden" id="discount_p" value="{{ $roomDetails->discount }}">
+
                                     <div class="col-lg-12">
-                                        @php
-                                            $roomsNumbers = App\Models\RoomNumber::where(
-                                                'room_id',
-                                                $roomDetails->id,
-                                            )->get();
-                                            $roomsCount = $roomsNumbers->count();
-                                            // @dd($roomsCount);
-
-                                            // $roomsSum = $roomsNumbers->sum('room_id');
-                                        @endphp
                                         <div class="form-group">
-                                            <label>Rooms Availablity :</label>
-                                            <select name="num_of_ava" class="form-control " ">
-                                                    <option value="{{ $roomsCount }}">{{ $roomsCount }}</option>
-
-                                                </select>
-                                            </div>
-
-                                        </div>
-                                        <div class="col-lg-12">
-                                            <div class="form-group">
-                                                <label>Numbers of Rooms</label>
-                                                <select name="num_of_room" class="form-control number_of_room">
-                                                     @for ($i=1; $i <=$roomsCount;
-                                                $i++)
-                                                <option value="{{ $i }}">{{ sprintf('%02d', $i) }}</option>
+                                            <label>Numbers of Rooms</label>
+                                            <select class="form-control" name="number_of_rooms" id="select_room">
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    <option value="0{{ $i }}">0{{ $i }}</option>
                                                 @endfor
+
                                             </select>
                                         </div>
+                                        <input type="hidden" name="available_room" id="available_room">
+                                        <p class="available_room"></p>
                                     </div>
-
                                     <div class="col-lg-12">
                                         <table class="table">
+
                                             <tbody>
                                                 <tr>
                                                     <td>
-                                                        <p>SubTotal</p>
+                                                        <p> SubTotal</p>
                                                     </td>
-                                                    <td style="text-align: right"><span
-                                                            class="t_subtotal">₹{{ $roomDetails->price }}</span></td>
+                                                    <td style="text-align: right"><span class="t_subtotal">0</span> </td>
                                                 </tr>
-                                                @php
-                                                    $roomDetailsDiscount =
-                                                        ($roomDetails->price * $roomDetails->discount) / 100;
-                                                @endphp
+
                                                 <tr>
                                                     <td>
-                                                        <p>Discount</p>
+                                                        <p> Discount</p>
                                                     </td>
-                                                    <td style="text-align: right">
-                                                        <p class="t_discount">
-                                                            {{ $roomDetails->discount }}%
-                                                            ( - ₹{{ number_format($roomDetailsDiscount, 2) }})
-                                                        </p>
-                                                    </td>
+                                                    <td style="text-align: right"><span class="t_discount">0</span></td>
                                                 </tr>
+
                                                 <tr>
                                                     <td>
-                                                        <p>Total</p>
+                                                        <p> Total</p>
                                                     </td>
-                                                    @php
-                                                        $total = $roomDetails->price - $roomDetailsDiscount;
-                                                    @endphp
-                                                    <td style="text-align: right">
-                                                        <p class="t_g_total">₹{{ $total }}</p>
-                                                    </td>
+                                                    <td style="text-align: right"><span class="t_g_total">0</span></td>
                                                 </tr>
+
                                             </tbody>
                                         </table>
+
                                     </div>
                                     <div class="col-lg-12 col-md-12">
                                         <button type="submit" class="default-btn btn-bg-three border-radius-5">
@@ -331,10 +301,71 @@
         </div>
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
     <script>
-        $('.number_of_room').on('change', function() {
-            alert('You selected ' + $(this).val() + ' rooms');
+        $(document).ready(function() {
+            var check_in = "{{ old('check_in') }}";
+            var check_out = "{{ old('check_out') }}";
+            var room_id = "{{ $room_id }}";
+            if (check_in != '' && check_out != '') {
+                getAvaility(check_in, check_out, room_id);
+            }
+            $("#check_out").on('change', function() {
+                var check_out = $(this).val();
+                var check_in = $("#check_in").val();
+                if (check_in != '' && check_out != '') {
+                    getAvaility(check_in, check_out, room_id);
+                }
+            });
+            $(".number_of_rooms").on('change', function() {
+                var check_out = $("#check_out").val();
+                var check_in = $("#check_in").val();
+                if (check_in != '' && check_out != '') {
+                    getAvaility(check_in, check_out, room_id);
+                }
+            });
         });
+
+        function getAvaility(check_in, check_out, room_id) {
+            $.ajax({
+                url: "{{ route('check_room_availability') }}",
+                data: {
+                    room_id: room_id,
+                    check_in: check_in,
+                    check_out: check_out
+                },
+                success: function(data) {
+                    $(".available_room").html('Availability : <span class="text-success">' + data[
+                        'available_room'] + ' Rooms</span>');
+                    $("#available_room").val(data['available_room']);
+                    price_calculate(data['total_nights']);
+                }
+            });
+        }
+
+        function price_calculate(total_nights) {
+            var room_price = $("#room_price").val();
+            var discount_p = $("#discount_p").val();
+            var select_room = $("#select_room").val();
+            var sub_total = room_price * total_nights * parseInt(select_room);
+            var discount_price = (parseInt(discount_p) / 100) * sub_total;
+            $(".t_subtotal").text(sub_total);
+            $(".t_discount").text(discount_price);
+            $(".t_g_total").text(sub_total - discount_price);
+        }
+        $("#bk_form").on('submit', function() {
+            var av_room = $("#available_room").val();
+            var select_room = $("#select_room").val();
+            if (parseInt(select_room) > av_room) {
+                alert('Sorry, you select maximum number of room');
+                return false;
+            }
+            var nmbr_person = $("#nmbr_person").val();
+            var total_adult = $("#total_adult").val();
+            if (parseInt(nmbr_person) > parseInt(total_adult)) {
+                alert('Sorry, you select maximum number of person');
+                return false;
+            }
+        })
     </script>
 @endsection
