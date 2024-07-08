@@ -11,11 +11,7 @@
                     </ol>
                 </nav>
             </div>
-            <div class="ms-auto">
-                <div class="btn-group">
-                    <a href="{{ route('add.team') }}" class="btn btn-outline-primary px-5">+ Add Booking</a>
-                </div>
-            </div>
+
         </div>
         <hr />
         <div class="card">

@@ -107,10 +107,12 @@ class BookingController extends Controller
         // print_r($code);
         // die;
 
+        $amount_in_usd = $total_price / 83.48;
+        $amount_in_cents = round($amount_in_usd * 100);
         if ($request->payment_method == 'Stripe') {
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
             $s_pay = \Stripe\Charge::create([
-                "amount" => $total_price * 100,
+                "amount" => $amount_in_cents,
                 "currency" => "usd",
                 "source" => $request->stripeToken,
                 "description" => "Payment For Booking. Booking No " . $code

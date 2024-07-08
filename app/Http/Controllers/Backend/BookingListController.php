@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Mail\BookingConfirm;
 use App\Models\Booking;
 use App\Models\BookingRoomList;
 use App\Models\RoomBookedDate;
@@ -10,6 +11,8 @@ use App\Models\RoomNumber;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Mail;
 
 class BookingListController extends Controller
 {
@@ -35,6 +38,17 @@ class BookingListController extends Controller
         $booking->status = $request->status;
         $booking->save();
 
+        $sendEmail = Booking::find($id);
+        $emailData = [
+            'check_in' => $sendEmail->check_in,
+            'check_out' => $sendEmail->check_out,
+            'name' => $sendEmail->name,
+            'email' => $sendEmail->email,
+            'phone' => $sendEmail->phone,
+        ];
+
+        Mail::to($sendEmail->email)->send(new BookingConfirm($emailData));
+
         $notification = array(
             'message' => 'Information Updated Successfully',
             'alert-type' => 'success'
@@ -44,15 +58,18 @@ class BookingListController extends Controller
     }
 
     public function UpdateBooking(Request $request, $id)
-    {
-        // if ($request->available_room < $request->number_of_rooms) {
 
-        //     $notification = array(
-        //         'message' => 'Something Want To Wrong!',
-        //         'alert-type' => 'error'
-        //     );
-        //     return redirect()->back()->with($notification);
-        // }
+    {
+
+        if ($request->available_room < $request->number_of_rooms) {
+
+            $notification = array(
+                'message' => 'Something Want To Wrong!',
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
+        }
+
 
         $data = Booking::find($id);
         $data->number_of_rooms = $request->number_of_rooms;
@@ -137,5 +154,18 @@ class BookingListController extends Controller
         );
 
         return redirect()->back()->with($notification);
+    }
+
+
+    public function downloadInvoice($id)
+    {
+        $editData = Booking::with('room')->findOrFail($id);
+        $pdf = Pdf::loadView('backend.booking.booking_invoice', compact('editData'))
+            ->setPaper('a4')->setOption([
+                'tempDir' => public_path(),
+                'chroot' => public_path(),
+            ]);
+
+        return $pdf->download('invoice.pdf');
     }
 }

@@ -72,9 +72,7 @@
             <ul>
                 <li> <a href="{{ route('booking.list') }}"><i class='bx bx-radio-circle'></i>Booking List</a>
                 </li>
-                <li> <a href="ecommerce-products-details.html"><i class='bx bx-radio-circle'></i>Product
-                        Details</a>
-                </li>
+                <li> <a href="{{ route('add.team') }}"><i class='bx bx-radio-circle'></i>Add Booking </a>
 
             </ul>
         </li>
@@ -86,6 +84,20 @@
             </a>
             <ul>
                 <li> <a href="{{ route('view.roomlist') }}"><i class='bx bx-radio-circle'></i>Room List</a>
+                </li>
+
+
+
+            </ul>
+        </li>
+        <li>
+            <a class="has-arrow" href="javascript:;">
+                <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
+                </div>
+                <div class="menu-title">Settings</div>
+            </a>
+            <ul>
+                <li> <a href="{{ route('mail.setting') }}"><i class='bx bx-radio-circle'></i>SMTP Setting</a>
                 </li>
 
 

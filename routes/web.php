@@ -5,6 +5,7 @@ use App\Http\Controllers\Backend\BookingListController;
 use App\Http\Controllers\Backend\RoomController;
 use App\Http\Controllers\Backend\RoomListController;
 use App\Http\Controllers\Backend\RoomTypeController;
+use App\Http\Controllers\Backend\SettingController;
 use App\Http\Controllers\Backend\TeamController;
 use App\Http\Controllers\Frontend\BookingController;
 use App\Http\Controllers\Frontend\FrontendRoomController;
@@ -38,6 +39,8 @@ Route::middleware('auth')->group(function () {
     Route::get('logout', [UserController::class, 'logout'])->name('user.logout');
     Route::get('edit/password', [UserController::class, 'editPass'])->name('edit.password');
     Route::post('edit/password', [UserController::class, 'storePass'])->name('password-update');
+    Route::get('user/booking', [UserController::class, 'userBooking'])->name('user.booking');
+    Route::get('user/invoice/{id}', [UserController::class, 'userInvoice'])->name('user.invoice');
 });
 
 require __DIR__ . '/auth.php';
@@ -73,9 +76,10 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
         Route::get('edit/booking/list/{id}', 'editBookingList')->name('edit.booking');
         Route::post('update/booking/status/{id}', 'updateBookingStatus')->name('update.booking.status');
         Route::post('update/booking/{id}', 'UpdateBooking')->name('update.booking');
-        Route::post('assign_room/{id}', 'assignRoom')->name('assing_room');
+        Route::get('assign_room/{id}', 'assignRoom')->name('assing_room');
         Route::get('assign_room/store/{booking_id}/{room_number_id}', 'assignRoomStore')->name('assign_room_store');
         Route::get('assign_room/delete/{id}', 'assignRoomDelete')->name('assing_room_delele');
+        Route::get('download/invoice/{id}', 'downloadInvoice')->name('download.invoice');
     });
 });
 
@@ -114,6 +118,7 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
     Route::controller(RoomListController::class)->group(function () {
         Route::get('/view/room/list', 'viewRoomList')->name('view.roomlist');
         Route::get('/add/room/list', 'addRoomList')->name('add.room-list');
+        Route::post('/store/roomlist', 'StoreRoomList')->name('store.roomlist');
     });
 });
 
@@ -134,5 +139,13 @@ Route::middleware(['auth'])->group(function () {
         Route::post('booking/store', 'BookingStore')->name('checkout.book');
         Route::post('checkout/store', 'checkoutStore')->name('checkout.store');
         Route::match(['get', 'post'], '/stripe_pay', 'stripe_pay')->name('stripe_pay');
+    });
+});
+// Mail Setting Or Setting route 
+Route::middleware(['auth', 'roles:admin'])->group(function () {
+    // CheckOut
+    Route::controller(SettingController::class)->group(function () {
+        Route::get('mail/setting', 'mailSetting')->name('mail.setting');
+        Route::post('mail/setting', 'mailSettingUpdate')->name('smtp.update');
     });
 });

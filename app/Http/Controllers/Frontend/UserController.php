@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -117,5 +119,27 @@ class UserController extends Controller
         );
 
         return back()->with($notification);
+    }
+
+
+    // User Booking
+
+    public function userBooking()
+    {
+        $id = Auth::user()->id;
+        $allData = Booking::where('user_id', $id)->orderBy('id', 'desc')->get();
+        return view('frontend.dashboard.user_booking', compact('allData'));
+    }
+
+    public function userInvoice($id)
+    {
+        $editData = Booking::with('room')->findOrFail($id);
+        $pdf = Pdf::loadView('backend.booking.booking_invoice', compact('editData'))
+            ->setPaper('a4')->setOption([
+                'tempDir' => public_path(),
+                'chroot' => public_path(),
+            ]);
+
+        return $pdf->download('invoice.pdf');
     }
 }

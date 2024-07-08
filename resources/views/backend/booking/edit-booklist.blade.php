@@ -1,6 +1,7 @@
 @extends('admin.admin_dashboard')
 
 @section('content')
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <div class="page-content">
         <div class="row row-cols-1 row-cols-md-2 row-cols-xl-5">
             <div class="col">
@@ -206,6 +207,9 @@
 
                                 <div class="col-md-12" style="margin-top: 20px;">
                                     <button type="submit" class="btn btn-primary">Update</button>
+                                    <a href="{{ route('download.invoice', $editData->id) }}"
+                                        class="btn btn-warning px-3 radius-10"><i class="lni lni-download"></i>Download
+                                        Invoice</a>
                                 </div>
 
                             </div>
@@ -244,43 +248,15 @@
                                 </div>
 
                                 <div class="col-md-12 mb-2">
-                                    @php
-                                        $roomsNumbers = App\Models\RoomNumber::where(
-                                            'room_id',
-                                            $editData->rooms_id,
-                                        )->get();
-                                        $roomsCount = $roomsNumbers->count();
-                                    @endphp
-                                    <label for="number_of_rooms">Number of Rooms</label>
-                                    <input type="number" id="number_of_rooms" name="number_of_rooms"
-                                        class="form-control" value="{{ $editData->number_of_rooms }}" required
-                                        max="{{ $roomsCount }}">
+                                    <label for="">Room</label>
+                                    <input type="number" required name="number_of_rooms" class="form-control"
+                                        value="{{ $editData->number_of_rooms }}">
                                 </div>
-
+                                <input type="hidden" name="available_room" id="available_room" class="form-control"
+                                    value="{{ $editData->number_of_rooms }}">
                                 <div class="col-md-12 mb-2">
-                                    @php
-                                        // $roomsNumbers = App\Models\RoomNumber::where(
-                                        //     'room_id',
-                                        //     $editData->rooms_id,
-                                        // )->get();
-                                        // $roomsCount = $roomsNumbers->count();
-                                        $roomsNumbers = App\Models\RoomNumber::where(
-                                            'room_id',
-                                            $editData->rooms_id,
-                                        )->get();
-                                        $roomsCount = $roomsNumbers->count();
-
-                                        // Fetch the booking count for these room numbers
-                                        $bookroomCount = App\Models\BookingRoomList::whereIn(
-                                            'room_id',
-                                            $roomsNumbers->pluck('room_id'),
-                                        )->count();
-
-                                        // Calculate availability
-                                        $availability = $roomsCount - $bookroomCount;
-                                    @endphp
-                                    <label>Availability: <span
-                                            class="text-success availability">{{ $availability }}</span></label>
+                                    <label for="">Availability: <span class="text-success availability"></span>
+                                    </label>
                                 </div>
 
                                 <div class="col-md-12 mb-2">
@@ -360,26 +336,38 @@
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function() {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            getAvaility();
+        });
+
+        $(".assign_room").on('click', function() {
+            $.ajax({
+                url: "{{ route('assing_room', $editData->id) }}",
+                success: function(data) {
+                    $('.myModal .modal-body').html(data);
+                    $('.myModal').modal('show');
                 }
             });
-            $(".assign_room").on('click', function() {
-                $.ajax({
-                    url: "{{ route('assing_room', $editData->id) }}",
-                    method: 'POST',
-                    success: function(data) {
-                        $('.myModal .modal-body').html(data);
-                        $('.myModal').modal('show');
-                    }
-                });
-                return false;
-            });
+            return false;
         });
+
+        function getAvaility() {
+            var check_in = $('#check_in').val();
+            var check_out = $('#check_out').val();
+            var room_id = "{{ $editData->rooms_id }}";
+            $.ajax({
+                url: "{{ route('check_room_availability') }}",
+                data: {
+                    room_id: room_id,
+                    check_in: check_in,
+                    check_out: check_out
+                },
+                success: function(data) {
+                    $(".availability").text(data['available_room']);
+                    $("#available_room").val(data['available_room']);
+                }
+            });
+        }
     </script>
 @endsection
