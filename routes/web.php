@@ -7,6 +7,7 @@ use App\Http\Controllers\Backend\RoomListController;
 use App\Http\Controllers\Backend\RoomTypeController;
 use App\Http\Controllers\Backend\SettingController;
 use App\Http\Controllers\Backend\TeamController;
+use App\Http\Controllers\Backend\TestimonialController;
 use App\Http\Controllers\Frontend\BookingController;
 use App\Http\Controllers\Frontend\FrontendRoomController;
 use App\Http\Controllers\Frontend\UserController;
@@ -147,5 +148,13 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
     Route::controller(SettingController::class)->group(function () {
         Route::get('mail/setting', 'mailSetting')->name('mail.setting');
         Route::post('mail/setting', 'mailSettingUpdate')->name('smtp.update');
+    });
+    Route::controller(TestimonialController::class)->group(function () {
+        Route::get('all/testimonial', 'allTestimonial')->name('all.testimonial');
+        Route::get('add/testimonial', 'addTestimonial')->name('add.testimonial');
+        Route::post('store/testimonial', 'storeTestimonial')->name('store.testimonial');
+        Route::get('edit/testimonial/{id}', 'editTestimonial')->name('edit.testimonial');
+        Route::get('delete/testimonial', 'deleteTestimonial')->name('delete.testimonial');
+        Route::post('edit/testimonial', 'submitTestimonial')->name('submit.testimonial');
     });
 });
