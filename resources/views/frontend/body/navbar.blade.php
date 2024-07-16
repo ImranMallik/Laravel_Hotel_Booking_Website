@@ -60,7 +60,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('blog.list') }}" class="nav-link">
                                 Blog
                                 <i class="bx bx-chevron-down"></i>
                             </a>

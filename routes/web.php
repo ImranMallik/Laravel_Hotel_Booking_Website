@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Backend\AdminController;
+use App\Http\Controllers\Backend\BlogController;
 use App\Http\Controllers\Backend\BookingListController;
+use App\Http\Controllers\Backend\CommentController;
 use App\Http\Controllers\Backend\RoomController;
 use App\Http\Controllers\Backend\RoomListController;
 use App\Http\Controllers\Backend\RoomTypeController;
@@ -154,7 +156,38 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
         Route::get('add/testimonial', 'addTestimonial')->name('add.testimonial');
         Route::post('store/testimonial', 'storeTestimonial')->name('store.testimonial');
         Route::get('edit/testimonial/{id}', 'editTestimonial')->name('edit.testimonial');
-        Route::get('delete/testimonial', 'deleteTestimonial')->name('delete.testimonial');
-        Route::post('edit/testimonial', 'submitTestimonial')->name('submit.testimonial');
+        Route::get('delete/testimonial/{id}', 'deleteTestimonial')->name('delete.testimonial');
+        Route::post('update/testimonial/{id}', 'submitTestimonial')->name('submit.testimonial');
+    });
+    Route::controller(BlogController::class)->group(function () {
+        Route::get('blog/category', 'blogcategory')->name('blog.category');
+        Route::post('/store/blog/category', 'StoreBlogCategory')->name('store.blog.category');
+        Route::get('/edit/blog/category/{id}', 'EditBlogCategory');
+        Route::post('/update/blog/category', 'UpdateBlogCategory')->name('update.blog.category');
+        Route::get('/delete/blog/category/{id}', 'DeleteBlogCategory')->name('delete.blog.category');
+        // BogPost
+        Route::get('all/blog/post', 'allBlogPost')->name('all.blog-post');
+        Route::get('add/blog/post', 'addBlogPost')->name('add.blog-post');
+        Route::post('add/blog/post', 'storeBlogPost')->name('blog-post.store');
+        Route::get('/edit/blog/post/{id}', 'EditBlogPost')->name('edit.blog.post');
+        Route::post('/update/blog/post', 'UpdateBlogPost')->name('update.blog.post');
+        Route::get('/delete/blog/post/{id}', 'DeleteBlogPost')->name('delete.blog.post');
+    });
+    // 
+    Route::controller(CommentController::class)->group(function () {
+        Route::get('all/comment/', 'allComment')->name('all-comment');
+        Route::post('/update-comment-status', 'updateStatus')->name('update.comment.status');
+    });
+});
+// User Show Blog Details
+
+Route::middleware('auth')->group(function () {
+    Route::controller(BlogController::class)->group(function () {
+        Route::get('blog/details/{slug}', 'blogDetails')->name('blog-details');
+        Route::get('blog/category/{id}', 'blogCatdetails')->name('blog-cat.details');
+        Route::get('/blog', 'BlogList')->name('blog.list');
+    });
+    Route::controller(CommentController::class)->group(function () {
+        Route::post('comment/store/', 'storeComment')->name('store-comment');
     });
 });

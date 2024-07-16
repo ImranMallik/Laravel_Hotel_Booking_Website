@@ -118,6 +118,37 @@
 
             </ul>
         </li>
+        <li>
+            <a class="has-arrow" href="javascript:;">
+                <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
+                </div>
+                <div class="menu-title">Blog</div>
+            </a>
+            <ul>
+                <li> <a href="{{ route('blog.category') }}"><i class='bx bx-radio-circle'></i>Blog Category</a>
+                </li>
+                <li> <a href="{{ route('all.blog-post') }}"><i class='bx bx-radio-circle'></i>All Blog Post</a>
+                </li>
+
+
+
+            </ul>
+        </li>
+        <li>
+            <a class="has-arrow" href="javascript:;">
+                <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
+                </div>
+                <div class="menu-title">Comments</div>
+            </a>
+            <ul>
+
+                <li> <a href="{{ route('all-comment') }}"><i class='bx bx-radio-circle'></i>All Comments</a>
+                </li>
+
+
+
+            </ul>
+        </li>
 
 
 
