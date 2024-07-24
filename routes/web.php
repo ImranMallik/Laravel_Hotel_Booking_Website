@@ -4,6 +4,9 @@ use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\BlogController;
 use App\Http\Controllers\Backend\BookingListController;
 use App\Http\Controllers\Backend\CommentController;
+use App\Http\Controllers\Backend\GalleryController;
+use App\Http\Controllers\Backend\ReportController;
+use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Backend\RoomController;
 use App\Http\Controllers\Backend\RoomListController;
 use App\Http\Controllers\Backend\RoomTypeController;
@@ -13,8 +16,8 @@ use App\Http\Controllers\Backend\TestimonialController;
 use App\Http\Controllers\Frontend\BookingController;
 use App\Http\Controllers\Frontend\FrontendRoomController;
 use App\Http\Controllers\Frontend\UserController;
-use App\Http\Controllers\ProfileController;
-use App\Models\BookingRoomList;
+// use App\Http\Controllers\ProfileController;
+// use App\Models\BookingRoomList;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -142,6 +145,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('booking/store', 'BookingStore')->name('checkout.book');
         Route::post('checkout/store', 'checkoutStore')->name('checkout.store');
         Route::match(['get', 'post'], '/stripe_pay', 'stripe_pay')->name('stripe_pay');
+        Route::post('/mark-notification-as-read/{notification}', 'MarkAsRead');
     });
 });
 // Mail Setting Or Setting route 
@@ -150,6 +154,8 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
     Route::controller(SettingController::class)->group(function () {
         Route::get('mail/setting', 'mailSetting')->name('mail.setting');
         Route::post('mail/setting', 'mailSettingUpdate')->name('smtp.update');
+        Route::get('/site/setting', 'SiteSetting')->name('site.setting');
+        Route::post('/site/update', 'SiteUpdate')->name('site.update');
     });
     Route::controller(TestimonialController::class)->group(function () {
         Route::get('all/testimonial', 'allTestimonial')->name('all.testimonial');
@@ -173,10 +179,49 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
         Route::post('/update/blog/post', 'UpdateBlogPost')->name('update.blog.post');
         Route::get('/delete/blog/post/{id}', 'DeleteBlogPost')->name('delete.blog.post');
     });
-    // 
+    // Comment
     Route::controller(CommentController::class)->group(function () {
         Route::get('all/comment/', 'allComment')->name('all-comment');
         Route::post('/update-comment-status', 'updateStatus')->name('update.comment.status');
+    });
+    // ReportController
+    Route::controller(ReportController::class)->group(function () {
+        Route::get('booking/report/', 'bookingReport')->name('booking.report');
+        Route::post('/search-by-date', 'SearchByDate')->name('search-by-date');
+    });
+    // GalleryController
+    Route::controller(GalleryController::class)->group(function () {
+        Route::get('all/gallery/', 'AllGallery')->name('all.gallery');
+        Route::get('/add/gallery', 'AddGallery')->name('add.gallery');
+        Route::post('/store/gallery', 'StoreGallery')->name('store.gallery');
+        Route::get('/edit/gallery/{id}', 'EditGallery')->name('edit.gallery');
+        Route::post('/update/gallery', 'UpdateGallery')->name('update.gallery');
+        Route::get('/delete/gallery/{id}', 'DeleteGallery')->name('delete.gallery');
+        Route::post('/delete/gallery/multiple', 'DeleteGalleryMultiple')->name('delete.gallery.multiple');
+        // Contact Data Show In Admin
+        Route::get('/contact/message', 'AdminContactMessage')->name('contact.message');
+    });
+    // Permission  Controller
+    Route::controller(RoleController::class)->group(function () {
+        Route::get('/all/permission', 'AllPermission')->name('all.permission');
+        Route::get('/add/permission', 'AddPermission')->name('add.permission');
+        Route::post('/store/permission', 'StorePermission')->name('store.permission');
+        Route::get('/edit/permission/{id}', 'EditPermission')->name('edit.permission');
+        Route::post('/update/permission', 'UpdatePermission')->name('update.permission');
+        Route::get('/delete/permission/{id}', 'DeletePermission')->name('delete.permission');
+        Route::get('/import/permission', 'ImportPermission')->name('import.permission');
+        Route::get('/export', 'Export')->name('export');
+        Route::post('/import', 'Import')->name('import');
+    });
+    // Role Controller
+    Route::controller(RoleController::class)->group(function () {
+        Route::get('/all/role', 'Allrole')->name('all.role');
+        Route::get('/add/roles', 'AddRoles')->name('add.roles');
+        Route::post('/store/roles', 'StoreRoles')->name('store.roles');
+        Route::get('/edit/roles/{id}', 'EditRoles')->name('edit.roles');
+        Route::post('/update/roles', 'UpdateRoles')->name('update.roles');
+        Route::get('/delete/roles/{id}', 'DeleteRoles')->name('delete.roles');
+        Route::get('/add/roles/permission', 'addRolePermission')->name('add.roles.permission');
     });
 });
 // User Show Blog Details
@@ -190,4 +235,14 @@ Route::middleware('auth')->group(function () {
     Route::controller(CommentController::class)->group(function () {
         Route::post('comment/store/', 'storeComment')->name('store-comment');
     });
+});
+
+/// Frontend Gallery All Route 
+Route::controller(GalleryController::class)->group(function () {
+
+    Route::get('/gallery', 'ShowGallery')->name('show.gallery');
+    Route::get('/contact', 'ContactUs')->name('contact.us');
+    Route::post('/store/contact', 'StoreContactUs')->name('store.contact');
+    // Contact Data show in Admin
+
 });

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Room;
 use App\Models\RoomBookedDate;
+use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Session;
@@ -13,8 +14,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Stripe;
 use Stripe\Stripe as StripeStripe;
+use App\Notifications\BookingComplete;
 
 // use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 
 class BookingController extends Controller
 {
@@ -82,6 +85,8 @@ class BookingController extends Controller
     {
         // dd($request->all());
         // dd(env('STRIPE_SECRET'));
+        $user = User::where('role', 'admin')->get();
+
         $request->validate([
             'country' => 'required',
             'name' => 'required',
@@ -188,6 +193,21 @@ class BookingController extends Controller
             'alert-type' => 'success'
         );
 
+        Notification::send($user, new BookingComplete($request->name));
+
         return redirect('/')->with($notification);
+    }
+
+    public function MarkAsRead(Request $request, $notificationId)
+    {
+
+        $user = Auth::user();
+        $notification = $user->notifications()->where('id', $notificationId)->first();
+
+        if ($notification) {
+            $notification->markAsRead();
+        }
+
+        return response()->json(['count' => $user->unreadNotifications()->count()]);
     }
 }

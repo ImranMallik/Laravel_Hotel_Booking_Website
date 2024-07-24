@@ -75,11 +75,7 @@
                         status: status
                     },
                     success: function(response) {
-                        if (response.success) {
-                            alert('Status updated successfully');
-                        } else {
-                            alert('Failed to update status');
-                        }
+                        toastr.success(response.message);
                     },
                     error: function(xhr, status, error) {
                         console.error(error);

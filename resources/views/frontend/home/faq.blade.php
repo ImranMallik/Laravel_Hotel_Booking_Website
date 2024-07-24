@@ -89,7 +89,8 @@
 
             <div class="col-lg-6">
                 <div class="faq-img-3">
-                    <img src="{{ asset('Frontend/assets/img/faq/faq-img3.jpg" alt="Images') }}" />
+                    <img src="{{ asset('Frontend/assets/img/faq/faq-img3.jpg') }}" alt="Images" />
+
                 </div>
             </div>
         </div>

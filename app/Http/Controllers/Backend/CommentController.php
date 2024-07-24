@@ -40,18 +40,8 @@ class CommentController extends Controller
         if ($comment) {
             $comment->status = $request->status;
             $comment->save();
-
-            $notification = array(
-                'message' => 'Status updated successfully',
-                'alert-type' => 'success'
-            );
-        } else {
-            $notification = array(
-                'message' => 'Failed to update status',
-                'alert-type' => 'error'
-            );
         }
 
-        return redirect()->back()->with($notification);
+        return response()->json(['message' => 'Comment Status Updated Successfully']);
     }
 }

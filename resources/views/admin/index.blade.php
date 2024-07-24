@@ -1,6 +1,17 @@
 @extends('admin.admin_dashboard')
 
 @section('content')
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    @php
+        $bookings = App\Models\Booking::latest()->get();
+        $pending = App\Models\Booking::where('status', '0')->get();
+        $complete = App\Models\Booking::where('status', '1')->get();
+        $totalPrice = App\Models\Booking::sum('total_price');
+        $today = Carbon\Carbon::now()->toDateString();
+        $todayprice = App\Models\Booking::whereDate('created_at', $today)->sum('total_price');
+        $bookingRoom = App\Models\Booking::orderBy('id', 'desc')->limit(10)->get();
+    @endphp
     <div class="page-content">
         <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
             <div class="col">
@@ -8,9 +19,9 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center">
                             <div>
-                                <p class="mb-0 text-secondary">Total Orders</p>
-                                <h4 class="my-1 text-info">4805</h4>
-                                <p class="mb-0 font-13">+2.5% from last week</p>
+                                <p class="mb-0 text-secondary">Total Booking</p>
+                                <h4 class="my-1 text-info">{{ count($bookings) }}</h4>
+                                <p class="mb-0 font-13">Today Sale: ${{ $todayprice }}</p>
                             </div>
                             <div class="widgets-icons-2 rounded-circle bg-gradient-blues text-white ms-auto"><i
                                     class='bx bxs-cart'></i>
@@ -24,8 +35,8 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center">
                             <div>
-                                <p class="mb-0 text-secondary">Total Revenue</p>
-                                <h4 class="my-1 text-danger">$84,245</h4>
+                                <p class="mb-0 text-secondary">Pening Booking</p>
+                                <h4 class="my-1 text-danger">{{ count($pending) }}</h4>
                                 <p class="mb-0 font-13">+5.4% from last week</p>
                             </div>
                             <div class="widgets-icons-2 rounded-circle bg-gradient-burning text-white ms-auto">
@@ -40,8 +51,8 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center">
                             <div>
-                                <p class="mb-0 text-secondary">Bounce Rate</p>
-                                <h4 class="my-1 text-success">34.6%</h4>
+                                <p class="mb-0 text-secondary">Complete Booking</p>
+                                <h4 class="my-1 text-success">{{ count($complete) }}</h4>
                                 <p class="mb-0 font-13">-4.5% from last week</p>
                             </div>
                             <div class="widgets-icons-2 rounded-circle bg-gradient-ohhappiness text-white ms-auto">
@@ -56,8 +67,8 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center">
                             <div>
-                                <p class="mb-0 text-secondary">Total Customers</p>
-                                <h4 class="my-1 text-warning">8.4K</h4>
+                                <p class="mb-0 text-secondary">Total Price</p>
+                                <h4 class="my-1 text-warning">${{ $totalPrice }}</h4>
                                 <p class="mb-0 font-13">+8.4% from last week</p>
                             </div>
                             <div class="widgets-icons-2 rounded-circle bg-gradient-orange text-white ms-auto">
@@ -70,257 +81,92 @@
         </div><!--end row-->
 
         <div class="row">
-            <div class="col-12 col-lg-8 d-flex">
+            <div class="col-12 col-lg-12 d-flex">
                 <div class="card radius-10 w-100">
                     <div class="card-header">
                         <div class="d-flex align-items-center">
                             <div>
                                 <h6 class="mb-0">Sales Overview</h6>
                             </div>
-                            <div class="dropdown ms-auto">
-                                <a class="dropdown-toggle dropdown-toggle-nocaret" href="#"
-                                    data-bs-toggle="dropdown"><i
-                                        class='bx bx-dots-horizontal-rounded font-22 text-option'></i>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="javascript:;">Action</a>
-                                    </li>
-                                    <li><a class="dropdown-item" href="javascript:;">Another action</a>
-                                    </li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li><a class="dropdown-item" href="javascript:;">Something else here</a>
-                                    </li>
-                                </ul>
-                            </div>
+
                         </div>
                     </div>
-                    <div class="card-body">
-                        <div class="d-flex align-items-center ms-auto font-13 gap-2 mb-3">
-                            <span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1"
-                                    style="color: #14abef"></i>Sales</span>
-                            <span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1"
-                                    style="color: #ffc107"></i>Visits</span>
-                        </div>
-                        <div class="chart-container-1">
-                            <canvas id="chart1"></canvas>
-                        </div>
-                    </div>
+
                     <div class="row row-cols-1 row-cols-md-3 row-cols-xl-3 g-0 row-group text-center border-top">
-                        <div class="col">
-                            <div class="p-3">
-                                <h5 class="mb-0">24.15M</h5>
-                                <small class="mb-0">Overall Visitor <span> <i class="bx bx-up-arrow-alt align-middle"></i>
-                                        2.43%</span></small>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="p-3">
-                                <h5 class="mb-0">12:38</h5>
-                                <small class="mb-0">Visitor Duration <span> <i
-                                            class="bx bx-up-arrow-alt align-middle"></i> 12.65%</span></small>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="p-3">
-                                <h5 class="mb-0">639.82</h5>
-                                <small class="mb-0">Pages/Visit <span> <i class="bx bx-up-arrow-alt align-middle"></i>
-                                        5.62%</span></small>
-                            </div>
-                        </div>
+                        <canvas id="bookingChart"></canvas>
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-lg-4 d-flex">
-                <div class="card radius-10 w-100">
-                    <div class="card-header">
-                        <div class="d-flex align-items-center">
-                            <div>
-                                <h6 class="mb-0">Trending Products</h6>
-                            </div>
-                            <div class="dropdown ms-auto">
-                                <a class="dropdown-toggle dropdown-toggle-nocaret" href="#"
-                                    data-bs-toggle="dropdown"><i
-                                        class='bx bx-dots-horizontal-rounded font-22 text-option'></i>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="javascript:;">Action</a>
-                                    </li>
-                                    <li><a class="dropdown-item" href="javascript:;">Another action</a>
-                                    </li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li><a class="dropdown-item" href="javascript:;">Something else here</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart-container-2">
-                            <canvas id="chart2"></canvas>
-                        </div>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li
-                            class="list-group-item d-flex bg-transparent justify-content-between align-items-center border-top">
-                            Jeans <span class="badge bg-success rounded-pill">25</span>
-                        </li>
-                        <li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">
-                            T-Shirts <span class="badge bg-danger rounded-pill">10</span>
-                        </li>
-                        <li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">
-                            Shoes <span class="badge bg-primary rounded-pill">65</span>
-                        </li>
-                        <li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">
-                            Lingerie <span class="badge bg-warning text-dark rounded-pill">14</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+
         </div><!--end row-->
 
         <div class="card radius-10">
             <div class="card-header">
                 <div class="d-flex align-items-center">
                     <div>
-                        <h6 class="mb-0">Recent Orders</h6>
+                        <h6 class="mb-0">Recent Booking</h6>
                     </div>
-                    <div class="dropdown ms-auto">
-                        <a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown"><i
-                                class='bx bx-dots-horizontal-rounded font-22 text-option'></i>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="javascript:;">Action</a>
-                            </li>
-                            <li><a class="dropdown-item" href="javascript:;">Another action</a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="javascript:;">Something else here</a>
-                            </li>
-                        </ul>
-                    </div>
+
                 </div>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table align-middle mb-0">
-                        <thead class="table-light">
+                    <table id="example" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
                             <tr>
-                                <th>Product</th>
-                                <th>Photo</th>
-                                <th>Product ID</th>
+                                <th>Sl No</th>
+                                <th>B No</th>
+                                <th>B Date</th>
+                                <th>Coustomer</th>
+                                <th>Room</th>
+                                <th>Check In/Out</th>
+                                <th>Total Room</th>
+                                <th>Guest</th>
+                                <th>Payment Method</th>
+                                <th>Payment</th>
                                 <th>Status</th>
-                                <th>Amount</th>
-                                <th>Date</th>
-                                <th>Shipping</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Iphone 5</td>
-                                <td><img src="assets/images/products/01.png" class="product-img-2" alt="product img">
-                                </td>
-                                <td>#9405822</td>
-                                <td><span class="badge bg-gradient-quepal text-white shadow-sm w-100">Paid</span>
-                                </td>
-                                <td>$1250.00</td>
-                                <td>03 Feb 2020</td>
-                                <td>
-                                    <div class="progress" style="height: 6px;">
-                                        <div class="progress-bar bg-gradient-quepal" role="progressbar"
-                                            style="width: 100%"></div>
-                                    </div>
-                                </td>
-                            </tr>
+                            @foreach ($bookingRoom as $index => $teams)
+                                <tr>
+                                    <td>{{ $index + 1 }}</td>
+                                    <td><a href="{{ route('edit.booking', $teams->id) }}"> {{ $teams->code }}</a></td>
+                                    <td>{{ $teams->created_at->format('d/m/Y') }}</td>
+                                    <td>{{ $teams['user']['name'] }}</td>
+                                    <td>{{ $teams['room']['type']['name'] }}</td>
+                                    <td><span class="badge bg-primary text-dark">{{ $teams->check_in }}</span> /<br>
+                                        <span class="badge bg-warning text-dark">{{ $teams->check_out }}</span>
+                                    </td>
+                                    <td>{{ $teams->number_of_rooms }}</td>
+                                    <td>{{ $teams->person }}</td>
+                                    <td>{{ $teams->payment_method }}</td>
+                                    <td>
+                                        @if ($teams->payment_status == '1')
+                                            <span class="text-success">Complete</span>
+                                        @else
+                                            <span class="text-danger">Pending</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($teams->status == '1')
+                                            <span class="text-success">Complete</span>
+                                        @else
+                                            <span class="text-danger">Pending</span>
+                                        @endif
+                                    </td>
+                                    <td>
 
-                            <tr>
-                                <td>Earphone GL</td>
-                                <td><img src="assets/images/products/02.png" class="product-img-2" alt="product img">
-                                </td>
-                                <td>#8304620</td>
-                                <td><span class="badge bg-gradient-blooker text-white shadow-sm w-100">Pending</span>
-                                </td>
-                                <td>$1500.00</td>
-                                <td>05 Feb 2020</td>
-                                <td>
-                                    <div class="progress" style="height: 6px;">
-                                        <div class="progress-bar bg-gradient-blooker" role="progressbar"
-                                            style="width: 60%"></div>
-                                    </div>
-                                </td>
-                            </tr>
+                                        <a href="{{ route('delete.team', $teams->id) }}"
+                                            class="btn btn-danger px-3 radius-30" id="deleteTeam">Delete</a>
+                                    </td>
+                                </tr>
+                            @endforeach
 
-                            <tr>
-                                <td>HD Hand Camera</td>
-                                <td><img src="assets/images/products/03.png" class="product-img-2" alt="product img">
-                                </td>
-                                <td>#4736890</td>
-                                <td><span class="badge bg-gradient-bloody text-white shadow-sm w-100">Failed</span>
-                                </td>
-                                <td>$1400.00</td>
-                                <td>06 Feb 2020</td>
-                                <td>
-                                    <div class="progress" style="height: 6px;">
-                                        <div class="progress-bar bg-gradient-bloody" role="progressbar"
-                                            style="width: 70%"></div>
-                                    </div>
-                                </td>
-                            </tr>
 
-                            <tr>
-                                <td>Clasic Shoes</td>
-                                <td><img src="assets/images/products/04.png" class="product-img-2" alt="product img">
-                                </td>
-                                <td>#8543765</td>
-                                <td><span class="badge bg-gradient-quepal text-white shadow-sm w-100">Paid</span>
-                                </td>
-                                <td>$1200.00</td>
-                                <td>14 Feb 2020</td>
-                                <td>
-                                    <div class="progress" style="height: 6px;">
-                                        <div class="progress-bar bg-gradient-quepal" role="progressbar"
-                                            style="width: 100%"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Sitting Chair</td>
-                                <td><img src="assets/images/products/06.png" class="product-img-2" alt="product img">
-                                </td>
-                                <td>#9629240</td>
-                                <td><span class="badge bg-gradient-blooker text-white shadow-sm w-100">Pending</span>
-                                </td>
-                                <td>$1500.00</td>
-                                <td>18 Feb 2020</td>
-                                <td>
-                                    <div class="progress" style="height: 6px;">
-                                        <div class="progress-bar bg-gradient-blooker" role="progressbar"
-                                            style="width: 60%"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Hand Watch</td>
-                                <td><img src="assets/images/products/05.png" class="product-img-2" alt="product img">
-                                </td>
-                                <td>#8506790</td>
-                                <td><span class="badge bg-gradient-bloody text-white shadow-sm w-100">Failed</span>
-                                </td>
-                                <td>$1800.00</td>
-                                <td>21 Feb 2020</td>
-                                <td>
-                                    <div class="progress" style="height: 6px;">
-                                        <div class="progress-bar bg-gradient-bloody" role="progressbar"
-                                            style="width: 40%"></div>
-                                    </div>
-                                </td>
-                            </tr>
                         </tbody>
+
                     </table>
                 </div>
             </div>
@@ -329,4 +175,37 @@
 
 
     </div>
+
+    <script>
+        var ctx = document.getElementById('bookingChart').getContext('2d');
+        var bookings = @json($bookings);
+
+        // Extract the required data from the bookings
+        var labels = bookings.map(function(booking) {
+            return booking.check_in;
+        });
+        var data = bookings.map(function(booking) {
+            return booking.total_price;
+        });
+        var bookingChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Booking Data',
+                    data: data,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
 @endsection
