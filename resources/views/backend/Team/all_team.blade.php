@@ -45,10 +45,14 @@
                                     <td>{{ $teams->position }}</td>
                                     <td>{{ $teams->facebook }}</td>
                                     <td>
-                                        <a href="{{ route('edit.team', $teams->id) }}"
-                                            class="btn btn-info px-3 radius-30">Edit</a>
-                                        <a href="{{ route('delete.team', $teams->id) }}"
-                                            class="btn btn-danger px-3 radius-30" id="deleteTeam">Delete</a>
+                                        @if (Auth::user()->can('team.edit'))
+                                            <a href="{{ route('edit.team', $teams->id) }}"
+                                                class="btn btn-info px-3 radius-30">Edit</a>
+                                        @endif
+                                        @if (Auth::user()->can('team.delete'))
+                                            <a href="{{ route('delete.team', $teams->id) }}"
+                                                class="btn btn-danger px-3 radius-30" id="deleteTeam">Delete</a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

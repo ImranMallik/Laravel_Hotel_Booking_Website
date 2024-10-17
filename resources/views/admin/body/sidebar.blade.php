@@ -29,10 +29,14 @@
 
                 </a>
                 <ul>
-                    <li> <a href="{{ route('all.team') }}"><i class='bx bx-radio-circle'></i>All Team</a>
-                    </li>
-                    <li> <a href="{{ route('add.team') }}"><i class='bx bx-radio-circle'></i>Add Team</a>
-                    </li>
+                    @if (Auth::user()->can('team.all'))
+                        <li> <a href="{{ route('all.team') }}"><i class='bx bx-radio-circle'></i>All Team</a>
+                        </li>
+                    @endif
+                    @if (Auth::user()->can('add.team'))
+                        <li> <a href="{{ route('add.team') }}"><i class='bx bx-radio-circle'></i>Add Team</a>
+                        </li>
+                    @endif
 
                 </ul>
             </li>

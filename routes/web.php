@@ -69,7 +69,7 @@ Route::get('admin/login', [AdminController::class, 'index'])->name('admin.login'
 // Team Route
 Route::middleware(['auth', 'roles:admin'])->group(function () {
     Route::controller(TeamController::class)->group(function () {
-        Route::get('/all/team', 'AllTeam')->name('all.team');
+        Route::get('/all/team', 'AllTeam')->name('all.team')->middleware('permission:team.all');
         Route::get('/add/team', 'AddTeam')->name('add.team');
         Route::post('/add/team', 'StoreTeam')->name('list.store');
         Route::get('/edit/team/{id}', 'editTeam')->name('edit.team');

@@ -180,6 +180,7 @@ class AdminController extends Controller
 
     public function updateAdmin(Request $request, $id)
     {
+        // dd($request->all());
         $user = User::find($id);
         $user->name = $request->name;
         $user->email = $request->email;
