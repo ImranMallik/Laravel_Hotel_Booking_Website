@@ -10,13 +10,14 @@
                     <ol class="breadcrumb mb-0 p-0">
                         <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">All Roles</li>
+                        <li class="breadcrumb-item active" aria-current="page">All Roles And Permission</li>
                     </ol>
                 </nav>
             </div>
             <div class="ms-auto">
                 <div class="btn-group">
-                    <a href="{{ route('add.roles') }}" class="btn btn-primary px-5">Add Roles </a>
+                    <a href="{{ route('add.roles.permission') }}" class="btn btn-primary px-5"> + Add Role in Permission
+                    </a>
                 </div>
 
 
@@ -35,6 +36,7 @@
                             <tr>
                                 <th>Sl</th>
                                 <th>Roles Name </th>
+                                <th>Permission</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -44,9 +46,14 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $item->name }}</td>
                                     <td>
-                                        <a href="{{ route('edit.role', $item->id) }}"
+                                        @foreach ($item->permissions as $perm)
+                                            <span class="badge bg-danger">{{ $perm->name }}</span>
+                                        @endforeach
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('edit.roles', $item->id) }}"
                                             class="btn btn-warning px-3 radius-30"> Edit</a>
-                                        <a href="{{ route('delete.roles', $item->id) }}"
+                                        <a href="{{ route('delete.roles.haspermission', $item->id) }}"
                                             class="btn btn-danger px-3 radius-30" id="deleteTeam"> Delete</a>
 
                                     </td>

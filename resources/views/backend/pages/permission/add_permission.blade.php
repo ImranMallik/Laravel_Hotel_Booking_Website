@@ -53,6 +53,7 @@
                                             <option value="Tesimonial">Tesimonial</option>
                                             <option value="Blog">Blog</option>
                                             <option value="Manage Comment">Manage Comment</option>
+                                            <option value="Add Room Number">Room Number</option>
                                             <option value="Booking Report">Booking Report </option>
                                             <option value="Hotel Gallery ">Hotel Gallery </option>
                                             <option value="Contact Message ">Contact Message </option>

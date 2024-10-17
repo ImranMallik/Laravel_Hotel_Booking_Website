@@ -218,10 +218,24 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
         Route::get('/all/role', 'Allrole')->name('all.role');
         Route::get('/add/roles', 'AddRoles')->name('add.roles');
         Route::post('/store/roles', 'StoreRoles')->name('store.roles');
-        Route::get('/edit/roles/{id}', 'EditRoles')->name('edit.roles');
+        Route::get('/edit/roles/{id}', 'EditRoles')->name('edit.role');
         Route::post('/update/roles', 'UpdateRoles')->name('update.roles');
         Route::get('/delete/roles/{id}', 'DeleteRoles')->name('delete.roles');
         Route::get('/add/roles/permission', 'addRolePermission')->name('add.roles.permission');
+        Route::post('/role/permission/store', 'rolePermissionStore')->name('role.permission.store');
+        Route::get('all-roles/permission', 'allrolesPermission')->name('all.roles.permission');
+        Route::get('/admin/edit/roles/{id}', 'AdminEditRoles')->name('edit.roles');
+        Route::post('/admin/roles/update/{id}', 'AdminRolesUpdate')->name('role.permission.update');
+        Route::get('/admin/delete/roles/{id}', 'AdminDeleteRoles')->name('delete.roles.haspermission');
+    });
+    // Admin Role
+    Route::controller(AdminController::class)->group(function () {
+        Route::get('all/admin', 'allAdmin')->name('all.admin');
+        Route::get('add/admin', 'addAdmin')->name('add.admin');
+        Route::post('store/admin', 'storeAdmin')->name('store.admin');
+        Route::get('edit/admin/{id}', 'editAdmin')->name('edit.admin');
+        Route::post('update/admin/{id}', 'updateAdmin')->name('update.admin');
+        Route::get('delete/admin/{id}', 'DeleteAdmin')->name('delete.admin');
     });
 });
 // User Show Blog Details
